@@ -1,0 +1,52 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Les évènements
+{% endblock %}
+{% block page_actions %}
+	<a class="btn btn-primary" href="{{ path('admin_event_create') }}">Ajouter un évènement</a>
+{% endblock %}
+
+{% block main %}
+	<table class="datagrid">
+		<thead>
+			<tr>
+				<th><input type="checkbox" id="select-all"></th>
+				<th>Nom de l'évènement</th>
+				<th>Adresse</th>
+				<th>Titre</th>
+				<th>Description</th>
+				<th>Catégorie</th>
+				<th>Prix</th>
+				<th>Réduction</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for event in events %}
+				<tr>
+					<td><input type="checkbox" name="ids[]" value="{{ event.id }}"></td>
+					<td>
+						<a href="{{ path('admin_event_show', {'id': event.id}) }}">{{ event.name }}</a>
+					</td>
+					<td>{{ event.address }}</td>
+					<td>{{ event.title }}</td>
+					<td>{{ event.description }}</td>
+					{% if event.category %}
+						<td>{{ event.category.type }}</td>
+					{% else %}
+						<td></td>
+					{% endif %}
+					<td>{{ event.price }}€</td>
+					<td>{{ event.reduction }}€</td>
+					<td>{{ event.date|date('d/m/Y') }}</td>
+					<td>
+						<a href="{{ path('admin_event_update', {'id': event.id}) }}" class="btn btn-primary">Editer</a>
+					</td>
+					<td>
+						<a href="{{ path('admin_event_delete', {'id': event.id}) }}" class="btn btn-danger">Supprimer</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
