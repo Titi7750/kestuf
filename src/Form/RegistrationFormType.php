@@ -26,7 +26,10 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Pense à saisir une adresse email',
                     ]),
                 ],
-                // Ajouter REGEX pour vérifier que l'email est valide
+                'attr' => [
+                    'pattern' => '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$',
+                    'title' => 'Adresse email valide uniquement',
+                ],
                 'required' => true,
             ])
             ->add('firstname', TextType::class, [
