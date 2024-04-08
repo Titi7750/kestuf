@@ -34,6 +34,7 @@ class CategoryCrudController extends DashboardController
             $entityManagerInterface->persist($category);
             $entityManagerInterface->flush();
 
+            $this->addFlash('success', 'La catégorie a bien été ajouté');
             return $this->redirectToRoute('admin_category');
         }
 
@@ -47,6 +48,10 @@ class CategoryCrudController extends DashboardController
     {
         $category = $entityManagerInterface->getRepository(Category::class)->find($id);
 
+        if (!$category) {
+            throw $this->createNotFoundException('La catégorie n\'existe pas');
+        }
+
         return $this->render('admin/category/showCategory.html.twig', [
             'category' => $category
         ]);
@@ -57,12 +62,17 @@ class CategoryCrudController extends DashboardController
     {
         $category = $entityManagerInterface->getRepository(Category::class)->find($id);
 
+        if (!$category) {
+            throw $this->createNotFoundException('La catégorie n\'existe pas');
+        }
+
         $formCategory = $this->createForm(CategoryType::class, $category);
         $formCategory->handleRequest($request);
 
         if ($formCategory->isSubmitted() && $formCategory->isValid()) {
             $entityManagerInterface->flush();
 
+            $this->addFlash('success', 'La catégorie a bien été modifié');
             return $this->redirectToRoute('admin_category');
         }
 
@@ -76,9 +86,14 @@ class CategoryCrudController extends DashboardController
     {
         $category = $entityManagerInterface->getRepository(Category::class)->find($id);
 
+        if (!$category) {
+            throw $this->createNotFoundException('La catégorie n\'existe pas');
+        }
+
         $entityManagerInterface->remove($category);
         $entityManagerInterface->flush();
 
+        $this->addFlash('success', 'La catégorie a bien été supprimé');
         return $this->redirectToRoute('admin_category');
     }
 }
