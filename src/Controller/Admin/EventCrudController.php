@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Event;
 use App\Form\EventType;
+use App\Services\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,7 +24,7 @@ class EventCrudController extends DashboardController
     }
 
     #[Route('/admin/event/create', name: 'admin_event_create')]
-    public function createEvent(Request $request, EntityManagerInterface $entityManagerInterface)
+    public function createEvent(Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader)
     {
         $event = new Event();
 
@@ -31,9 +32,17 @@ class EventCrudController extends DashboardController
         $formEvent->handleRequest($request);
 
         if ($formEvent->isSubmitted() && $formEvent->isValid()) {
+            $imageFile = $formEvent->get('picture')->getData();
+
+            if ($imageFile) {
+                $imageFileName = $fileUploader->upload($imageFile);
+                $event->setPicture($imageFileName);
+            }
+
             $entityManagerInterface->persist($event);
             $entityManagerInterface->flush();
 
+            $this->addFlash('success', 'L\'événement a bien été ajouté');
             return $this->redirectToRoute('admin_event');
         }
 
@@ -47,22 +56,38 @@ class EventCrudController extends DashboardController
     {
         $event = $entityManagerInterface->getRepository(Event::class)->find($id);
 
+        if (!$event) {
+            throw $this->createNotFoundException('L\'événement n\'existe pas');
+        }
+
         return $this->render('admin/event/showEvent.html.twig', [
             'event' => $event
         ]);
     }
 
     #[Route('/admin/event/update/{id}', name: 'admin_event_update')]
-    public function updateEvent(Event $id, Request $request, EntityManagerInterface $entityManagerInterface)
+    public function updateEvent(Event $id, Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader)
     {
         $event = $entityManagerInterface->getRepository(Event::class)->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException('L\'événement n\'existe pas');
+        }
 
         $formEvent = $this->createForm(EventType::class, $event);
         $formEvent->handleRequest($request);
 
         if ($formEvent->isSubmitted() && $formEvent->isValid()) {
+            $imageFile = $formEvent->get('picture')->getData();
+
+            if ($imageFile) {
+                $imageFileName = $fileUploader->upload($imageFile);
+                $event->setPicture($imageFileName);
+            }
+
             $entityManagerInterface->flush();
 
+            $this->addFlash('success', 'L\'événement a bien été modifié');
             return $this->redirectToRoute('admin_event');
         }
 
@@ -76,9 +101,20 @@ class EventCrudController extends DashboardController
     {
         $event = $entityManagerInterface->getRepository(Event::class)->find($id);
 
+        if (!$event) {
+            throw $this->createNotFoundException('L\'événement n\'existe pas');
+        }
+
+        // Supprimer image de l'événement
+        $file = $this->getParameter('image_directory') . '/' . $event->getPicture();
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
         $entityManagerInterface->remove($event);
         $entityManagerInterface->flush();
 
+        $this->addFlash('success', 'L\'événement a bien été supprimé');
         return $this->redirectToRoute('admin_event');
     }
 }
