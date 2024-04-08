@@ -2,51 +2,144 @@
 
 {% block content_title %}Les évènements
 {% endblock %}
+
 {% block page_actions %}
 	<a class="btn btn-primary" href="{{ path('admin_event_create') }}">Ajouter un évènement</a>
 {% endblock %}
 
 {% block main %}
-	<table class="datagrid">
-		<thead>
-			<tr>
-				<th><input type="checkbox" id="select-all"></th>
-				<th>Nom de l'évènement</th>
-				<th>Adresse</th>
-				<th>Titre</th>
-				<th>Description</th>
-				<th>Catégorie</th>
-				<th>Prix</th>
-				<th>Réduction</th>
-				<th>Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for event in events %}
-				<tr>
-					<td><input type="checkbox" name="ids[]" value="{{ event.id }}"></td>
-					<td>
-						<a href="{{ path('admin_event_show', {'id': event.id}) }}">{{ event.name }}</a>
-					</td>
-					<td>{{ event.address }}</td>
-					<td>{{ event.title }}</td>
-					<td>{{ event.description }}</td>
-					{% if event.category %}
-						<td>{{ event.category.type }}</td>
-					{% else %}
-						<td></td>
-					{% endif %}
-					<td>{{ event.price }}€</td>
-					<td>{{ event.reduction }}€</td>
-					<td>{{ event.date|date('d/m/Y') }}</td>
-					<td>
-						<a href="{{ path('admin_event_update', {'id': event.id}) }}" class="btn btn-primary">Editer</a>
-					</td>
-					<td>
-						<a href="{{ path('admin_event_delete', {'id': event.id}) }}" class="btn btn-danger">Supprimer</a>
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	{# Initialisation des champs optionnels à false #}
+	{% set columnsToShow = {'description': false, 'category': false, 'picture': false, 'price': false, 'reduction': false, 'date': false} %}
+
+	{# Dynamique de décision pour l'affichage des colonnes #}
+	{% for event in events %}
+		{% set columnsToShow = columnsToShow|merge({
+            'description': columnsToShow.description or event.description,
+            'category': columnsToShow.category or event.category,
+            'picture': columnsToShow.picture or event.picture,
+            'price': columnsToShow.price or event.price,
+            'reduction': columnsToShow.reduction or event.reduction,
+            'date': columnsToShow.date or event.date
+        }) %}
+	{% endfor %}
+
+	{% if events|length > 0 %}
+		<div class="table-responsive">
+			<table class="table table-hover">
+				<thead class="thead-light">
+					<tr>
+						<th>Titre</th>
+						<th>Nom de l'évènement</th>
+						<th>Adresse</th>
+						{% if columnsToShow.description %}
+							<th>Description</th>
+						{% endif %}
+						{% if columnsToShow.category %}
+							<th>Catégorie</th>
+						{% endif %}
+						{% if columnsToShow.picture %}
+							<th>Image</th>
+						{% endif %}
+						{% if columnsToShow.price %}
+							<th>Prix</th>
+						{% endif %}
+						{% if columnsToShow.reduction %}
+							<th>Réduction</th>
+						{% endif %}
+						{% if columnsToShow.date %}
+							<th>Date</th>
+						{% endif %}
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for event in events %}
+						<tr>
+							<td>{{ event.title }}</td>
+							<td>{{ event.name }}</td>
+							<td>{{ event.address }}</td>
+							{% if columnsToShow.description %}
+								<td>{{ event.description|default('N/A') }}</td>
+							{% endif %}
+							{% if columnsToShow.category %}
+								<td>{{ event.category.type|default('N/A') }}</td>
+							{% endif %}
+							{% if columnsToShow.picture %}
+								<td>{{ event.picture ? 'Oui' : 'Non' }}</td>
+							{% endif %}
+							{% if columnsToShow.price %}
+								<td>{{ event.price ? event.price ~ '€' : 'N/A' }}</td>
+							{% endif %}
+							{% if columnsToShow.reduction %}
+								<td>{{ event.reduction ? event.reduction ~ '€' : 'N/A' }}</td>
+							{% endif %}
+							{% if columnsToShow.date %}
+								<td>{{ event.date ? event.date|date('d/m/Y') : 'N/A' }}</td>
+							{% endif %}
+							<td class="actions z-3">
+								<div class="dropdown">
+									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton{{ event.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+										Actions
+									</button>
+									<ul class="dropdown-menu z-3" aria-labelledby="dropdownMenuButton{{ event.id }}">
+										<li>
+											<a class="dropdown-item" href="{{ path('admin_category_show', {'id': category.id}) }}">
+												<i class="fa-solid fa-eye"></i>
+												Voir
+											</a>
+										</li>
+										<li>
+											<a class="dropdown-item" href="{{ path('admin_category_update', {'id': category.id}) }}">
+												<i class="fa-solid fa-pen-to-square"></i>
+												Modifier
+											</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-danger" href="{{ path('admin_category_delete', {'id': category.id}) }}" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ category.id }}">
+												<i class="fa-solid fa-trash"></i>
+												Supprimer
+											</a>
+										</li>
+									</ul>
+								</div>
+								<!-- Modal for delete confirmation -->
+								<div class="modal fade" id="modal-delete-{{ event.id }}" tabindex="-1" aria-labelledby="modalLabelDelete{{ event.id }}" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="modalLabelDelete{{ event.id }}">Confirmer la suppression</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												Êtes-vous sûr de vouloir supprimer cet élément ?
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+												<a href="{{ path('admin_event_delete', {'id': event.id}) }}" class="btn btn-danger">Supprimer</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<p>Aucun évènement disponible pour le moment.
+			<a href="{{ path('admin_event_create') }}">Ajoutez un nouvel évènement</a>.</p>
+	{% endif %}
+{% endblock %}
+
+{% block custom_styles %}
+	<style>
+		.table-hover tbody tr:hover {
+			background-color: #f5f5f5;
+		}
+		.btn-outline-primary,
+		.btn-outline-danger {
+			margin-right: 5px;
+		}
+	</style>
 {% endblock %}

@@ -1,6 +1,7 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block page_title %}Détails de l'évènement{% endblock %}
+{% block title %}Détails de l'évènement
+{% endblock %}
 
 {% block page_actions %}
 	<a href="{{ path('admin_event') }}" class="btn btn-secondary">
@@ -18,24 +19,52 @@
 				</div>
 				<div class="card-body">
 					<div class="form-group">
-						<label for="exampleInputEmail1">Nom de l'évènement</label>
+						<label for="name">Titre de l'évènement</label>
+						<p>{{ event.title }}</p>
+					</div>
+					<div class="form-group">
+						<label for="name">Nom de l'évènement</label>
 						<p>{{ event.name }}</p>
 					</div>
 					<div class="form-group">
-						<label for="exampleInputEmail1">Date de l'évènement</label>
-						<p>{{ event.date|date('d/m/Y') }}</p>
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Description de l'évènement</label>
-						<p>{{ event.description }}</p>
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Lieu de l'évènement</label>
+						<label for="address">Lieu de l'évènement</label>
 						<p>{{ event.address }}</p>
 					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Prix de l'évènement</label>
-						<p>{{ event.price }}</p>
+					{% if (event.category) %}
+						<div class="form-group">
+							<label for="type">Catégorie de l'évènement</label>
+							<p>{{ event.category.type }}</p>
+						</div>
+					{% endif %}
+					{% if (event.description) %}
+						<div class="form-group">
+							<label for="description">Description de l'évènement</label>
+							<p>{{ event.description }}</p>
+						</div>
+					{% endif %}
+					{% if (event.price) %}
+						<div class="form-group">
+							<label for="price">Prix de l'évènement</label>
+							<p>{{ event.price }}
+								€</p>
+						</div>
+					{% endif %}
+					{% if (event.reduction) %}
+						<div class="form-group">
+							<label for="reduction">Réduction de l'évènement</label>
+							<p>{{ event.reduction }}
+								€</p>
+						</div>
+					{% endif %}
+					{% if (event.date) %}
+						<div class="form-group">
+							<label for="date">Date de l'évènement</label>
+							<p>{{ event.date|date('d/m/Y') }}</p>
+						</div>
+					{% endif %}
+					<div class="form-group d-flex flex-column">
+						<label for="picture">Image de l'évènement</label>
+						<img class="w-50 h-50" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="{{ event.name }}">
 					</div>
 				</div>
 			</div>

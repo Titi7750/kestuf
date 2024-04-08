@@ -14,8 +14,12 @@
 {% endblock %}
 
 {% block main %}
-	{{ form_start(formEvent) }}
-	{{ form_row(formEvent) }}
-	<button type="submit" class="btn btn-primary">Modifier</button>
-	{{ form_end(formEvent) }}
+	<div class="container mt-5">
+		{{ form_start(formEvent, {'attr': {'novalidate': 'novalidate'}}) }}
+		{{ form_widget(formEvent) }}
+
+		<button type="submit" class="btn btn-primary btn-lg">Modifier</button>
+
+		{{ form_end(formEvent) }}
+	</div>
 {% endblock %}

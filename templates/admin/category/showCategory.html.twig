@@ -1,9 +1,10 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block page_title %}Détails de la catégorie{% endblock %}
+{% block title %}Détails de la catégorie
+{% endblock %}
 
 {% block page_actions %}
-	<a href="{{ path('admin_event') }}" class="btn btn-secondary">
+	<a href="{{ path('admin_category') }}" class="btn btn-secondary">
 		<i class="fa fa-reply"></i>
 		Retour à la liste des catégories
 	</a>

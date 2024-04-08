@@ -15,8 +15,11 @@ class CategoryType extends AbstractType
         $builder
             ->add('type', TextType::class, [
                 'label' => 'Catégorie',
-            ])
-        ;
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control mb-3',
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

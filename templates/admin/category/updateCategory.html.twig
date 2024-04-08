@@ -14,8 +14,12 @@
 {% endblock %}
 
 {% block main %}
-	{{ form_start(formCategory) }}
-	{{ form_row(formCategory) }}
-	<button type="submit" class="btn btn-primary">Modifier</button>
-	{{ form_end(formCategory) }}
+	<div class="container mt-5">
+		{{ form_start(formCategory, {'attr': {'novalidate': 'novalidate'}}) }}
+		{{ form_widget(formCategory) }}
+
+		<button type="submit" class="btn btn-primary btn-lg">Modifier</button>
+
+		{{ form_end(formCategory) }}
+	</div>
 {% endblock %}
