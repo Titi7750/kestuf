@@ -1,0 +1,25 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Ajout d'un évènement
+{% endblock %}
+
+{% block page_actions %}
+	<a href="{{ path('admin_event') }}" class="btn btn-secondary">
+		<i class="fa fa-reply"></i>
+		Retour à la liste des évènements
+	</a>
+{% endblock %}
+
+{% block content_title %}Ajout d'un évènement
+{% endblock %}
+
+{% block main %}
+	<div class="container mt-5">
+		{{ form_start(formEvent, {'attr': {'novalidate': 'novalidate'}}) }}
+		{{ form_widget(formEvent) }}
+
+		<button type="submit" class="btn btn-primary btn-lg">Ajouter</button>
+
+		{{ form_end(formEvent) }}
+	</div>
+{% endblock %}
