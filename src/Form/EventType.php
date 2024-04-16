@@ -26,11 +26,11 @@ class EventType extends AbstractType
                 'label' => 'Nom',
                 'constraints' => [
                     new NotBlank(
-                        ['message' => 'Pense à saisir un nom']
+                        ['message' => 'Remember to enter a name']
                     ),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Désolé, le nom doit être au moins {{ limit }} caractères',
+                        'minMessage' => 'Sorry, the name must be at least {{ limit }} characters long',
                         'max' => 50,
                     ])
                 ],
@@ -44,11 +44,11 @@ class EventType extends AbstractType
                 'label' => 'Adresse',
                 'constraints' => [
                     new NotBlank(
-                        ['message' => 'Pense à saisir une adresse']
+                        ['message' => 'Remember to enter an address']
                     ),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Désolé, l\'adresse doit être au moins {{ limit }} caractères',
+                        'minMessage' => 'Sorry, the address must be at least {{ limit }} characters long',
                         'max' => 50,
                     ])
                 ],
@@ -61,11 +61,11 @@ class EventType extends AbstractType
                 'label' => 'Titre',
                 'constraints' => [
                     new NotBlank(
-                        ['message' => 'Pense à saisir un titre']
+                        ['message' => 'Remember to enter a title']
                     ),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Désolé, le titre doit être au moins {{ limit }} caractères',
+                        'minMessage' => 'Sorry, the title must be at least {{ limit }} characters long',
                         'max' => 50,
                     ])
                 ],
@@ -86,7 +86,7 @@ class EventType extends AbstractType
                             'image/jpg',
                             'image/png',
                         ],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide',
+                        'mimeTypesMessage' => 'Please upload a valid image',
                     ])
                 ],
                 'attr' => [
@@ -108,7 +108,7 @@ class EventType extends AbstractType
                 'placeholder' => 'Choisir une catégorie',
                 'constraints' => [
                     new NotBlank(
-                        ['message' => 'Pense à choisir une catégorie']
+                        ['message' => 'Remember to choose a category']
                     ),
                 ],
                 'attr' => [
