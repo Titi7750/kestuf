@@ -6,10 +6,12 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -23,7 +25,7 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Adresse email',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Pense à saisir une adresse email',
+                        'message' => 'Remember to enter your email address',
                     ]),
                 ],
                 'attr' => [
@@ -36,11 +38,11 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Prénom',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Pense à saisir un prénom',
+                        'message' => 'Remember to enter a first name',
                     ]),
                     new Length([
                         'min' => 3,
-                        'minMessage' => 'Désolé, ton prénom doit être au moins {{ limit }} caractères',
+                        'minMessage' => 'Sorry, your first name must be at least {{ limit }} characters long',
                         'max' => 50,
                     ])
                 ],
@@ -50,11 +52,11 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Nom',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Pense à saisir un nom',
+                        'message' => 'Remember to enter a name',
                     ]),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Désolé, ton nom doit être au moins {{ limit }} caractères',
+                        'minMessage' => 'Sorry, your name must be at least {{ limit }} characters long',
                         'max' => 50,
                     ])
                 ],
@@ -68,23 +70,42 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Pense à saisir un mot de passe',
+                        'message' => 'Remember to enter a password',
                     ]),
                     new Length([
                         'min' => 9,
-                        'minMessage' => 'Désolé, ton mot de passe doit être au moins {{ limit }} caractères',
+                        'minMessage' => 'Sorry, your password must be at least {{ limit }} characters long',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
                 'required' => true,
             ])
+            ->add('picture', FileType::class, [
+                'label' => 'Image',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid profile image',
+                    ])
+                ],
+                'attr' => [
+                    'class' => 'form-control mb-3',
+                ],
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'J\'accepte les conditions d\'utilisation',
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'Tu dois accepter nos conditions avant de pouvoir utiliser Kestuf\'.',
+                        'message' => 'You must accept our conditions before you can use Kestuf\'.',
                     ]),
                 ],
                 'required' => true,
