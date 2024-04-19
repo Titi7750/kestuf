@@ -19,10 +19,6 @@
 				</div>
 				<div class="card-body">
 					<div class="form-group">
-						<label for="name">Titre de l'évènement</label>
-						<p>{{ event.title }}</p>
-					</div>
-					<div class="form-group">
 						<label for="name">Nom de l'évènement</label>
 						<p>{{ event.name }}</p>
 					</div>
@@ -45,21 +41,19 @@
 					{% if (event.price) %}
 						<div class="form-group">
 							<label for="price">Prix de l'évènement</label>
-							<p>{{ event.price }}
-								€</p>
+							<p>{{ event.price }}</p>
 						</div>
 					{% endif %}
-					{% if (event.reduction) %}
+					{% if (event.open_hours) %}
 						<div class="form-group">
-							<label for="reduction">Réduction de l'évènement</label>
-							<p>{{ event.reduction }}
-								€</p>
+							<label for="date">Horaire de l'ouverture</label>
+							<p>{{ event.open_hours|date('H:i:s') }}</p>
 						</div>
 					{% endif %}
-					{% if (event.date) %}
+					{% if (event.close_hours) %}
 						<div class="form-group">
-							<label for="date">Date de l'évènement</label>
-							<p>{{ event.date|date('d/m/Y') }}</p>
+							<label for="date">Horaire de fermeture</label>
+							<p>{{ event.close_hours|date('H:i:s') }}</p>
 						</div>
 					{% endif %}
 					<div class="form-group d-flex flex-column">

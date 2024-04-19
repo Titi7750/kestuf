@@ -6,11 +6,11 @@ use App\Entity\Category;
 use App\Entity\Event;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
@@ -49,23 +49,6 @@ class EventType extends AbstractType
                     new Length([
                         'min' => 2,
                         'minMessage' => 'Sorry, the address must be at least {{ limit }} characters long',
-                        'max' => 50,
-                    ])
-                ],
-                'attr' => [
-                    'class' => 'form-control mb-3',
-                ],
-            ])
-
-            ->add('title', TextType::class, [
-                'label' => 'Titre',
-                'constraints' => [
-                    new NotBlank(
-                        ['message' => 'Remember to enter a title']
-                    ),
-                    new Length([
-                        'min' => 2,
-                        'minMessage' => 'Sorry, the title must be at least {{ limit }} characters long',
                         'max' => 50,
                     ])
                 ],
@@ -117,26 +100,35 @@ class EventType extends AbstractType
                 'required' => true,
             ])
 
-            ->add('price', NumberType::class, [
+            ->add('price', ChoiceType::class, [
                 'label' => 'Prix',
                 'required' => false,
+                'placeholder' => 'Choisir un prix',
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
-            ])
-
-            ->add('reduction', NumberType::class, [
-                'label' => 'Réduction',
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-control mb-3',
+                'choices' => [
+                    '€' => '€',
+                    '€€' => '€€',
+                    '€€€' => '€€€',
                 ],
             ])
 
-            ->add('date', DateTimeType::class, [
+            ->add('open_hours', null, [
+                'label' => 'Heure d\'ouverture',
                 'widget' => 'single_text',
-                'label' => 'Date',
                 'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-control mb-3',
+                ],
+            ])
+
+            ->add('close_hours', null, [
+                'label' => 'Heure de fermeture',
+                'widget' => 'single_text',
+                'required' => false,
+                'mapped' => false,
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],

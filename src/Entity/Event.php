@@ -22,20 +22,17 @@ class Event
     #[ORM\Column(length: 500)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $price = null;
+    #[ORM\Column(length: 50)]
+    private ?string $price = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $reduction = null;
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $open_hours = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $close_hours = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?Category $category = null;
@@ -81,18 +78,6 @@ class Event
         return $this;
     }
 
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): static
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -105,38 +90,38 @@ class Event
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice(?float $price): static
+    public function setPrice(?string $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getReduction(): ?float
+    public function getOpen_hours(): ?\DateTimeInterface
     {
-        return $this->reduction;
+        return $this->open_hours;
     }
 
-    public function setReduction(?float $reduction): static
+    public function setOpen_hours(?\DateTimeInterface $open_hours): static
     {
-        $this->reduction = $reduction;
+        $this->open_hours = $open_hours;
 
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getClose_hours(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->close_hours;
     }
 
-    public function setDate(?\DateTimeInterface $date): static
+    public function setClose_hours(?\DateTimeInterface $close_hours): static
     {
-        $this->date = $date;
+        $this->close_hours = $close_hours;
 
         return $this;
     }
