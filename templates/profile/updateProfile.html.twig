@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}Modification
+{% endblock %}
+
+{% block page_actions %}
+	<a href="{{ path('app_profile') }}" class="btn btn-secondary">
+		<i class="fa fa-reply"></i>
+		Retour à mon profil
+	</a>
+{% endblock %}
+
+{% block content_title %}Modification
+{% endblock %}
+
+{% block main %}
+<h1>Modification</h1>
+	<div class="container mt-5">
+		{{ form_start(formProfile) }}
+		{{ form_widget(formProfile) }}
+		{{ form_end(formProfile) }}
+	</div>
+{% endblock %}
