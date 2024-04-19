@@ -1,0 +1,25 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Modification d'une catégorie
+{% endblock %}
+
+{% block page_actions %}
+	<a href="{{ path('admin_category') }}" class="btn btn-secondary">
+		<i class="fa fa-reply"></i>
+		Retour à la liste des catégories
+	</a>
+{% endblock %}
+
+{% block content_title %}Modification d'une catégorie
+{% endblock %}
+
+{% block main %}
+	<div class="container mt-5">
+		{{ form_start(formCategory, {'attr': {'novalidate': 'novalidate'}}) }}
+		{{ form_widget(formCategory) }}
+
+		<button type="submit" class="btn btn-primary btn-lg">Modifier</button>
+
+		{{ form_end(formCategory) }}
+	</div>
+{% endblock %}
