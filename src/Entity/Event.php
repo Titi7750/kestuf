@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,6 +42,15 @@ class Event
 
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $picture = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'event_user_favorite')]
+    #[ORM\JoinTable(name: 'user_event_favorite')]
+    private Collection $user_event_favorite;
+
+    public function __construct()
+    {
+        $this->user_event_favorite = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -152,5 +163,34 @@ class Event
         $this->picture = $picture;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUserEventFavorite(): Collection
+    {
+        return $this->user_event_favorite;
+    }
+
+    public function addUserEventFavorite(User $userEventFavorite): static
+    {
+        if (!$this->user_event_favorite->contains($userEventFavorite)) {
+            $this->user_event_favorite->add($userEventFavorite);
+        }
+
+        return $this;
+    }
+
+    public function removeUserEventFavorite(User $userEventFavorite): static
+    {
+        $this->user_event_favorite->removeElement($userEventFavorite);
+
+        return $this;
+    }
+
+    public function isFavorite(User $user): bool
+    {
+        return $this->getUserEventFavorite()->contains($user);
     }
 }
