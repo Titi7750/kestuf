@@ -114,21 +114,19 @@ class EventType extends AbstractType
                 ],
             ])
 
-            ->add('open_hours', null, [
+            ->add('open_hours', TimeType::class, [
                 'label' => 'Heure d\'ouverture',
                 'widget' => 'single_text',
                 'required' => false,
-                'mapped' => false,
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
             ])
 
-            ->add('close_hours', null, [
+            ->add('close_hours', TimeType::class, [
                 'label' => 'Heure de fermeture',
                 'widget' => 'single_text',
                 'required' => false,
-                'mapped' => false,
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],

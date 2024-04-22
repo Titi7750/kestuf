@@ -44,16 +44,16 @@
 							<p>{{ event.price }}</p>
 						</div>
 					{% endif %}
-					{% if (event.open_hours) %}
+					{% if (event.openhours) %}
 						<div class="form-group">
 							<label for="date">Horaire de l'ouverture</label>
-							<p>{{ event.open_hours|date('H:i:s') }}</p>
+							<p>{{ event.openhours|date('H:i:s') }}</p>
 						</div>
 					{% endif %}
-					{% if (event.close_hours) %}
+					{% if (event.closehours) %}
 						<div class="form-group">
 							<label for="date">Horaire de fermeture</label>
-							<p>{{ event.close_hours|date('H:i:s') }}</p>
+							<p>{{ event.closehours|date('H:i:s') }}</p>
 						</div>
 					{% endif %}
 					<div class="form-group d-flex flex-column">

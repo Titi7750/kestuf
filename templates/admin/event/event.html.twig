@@ -9,7 +9,7 @@
 
 {% block main %}
 	{# Initialisation des champs optionnels à false #}
-	{% set columnsToShow = {'description': false, 'category': false, 'picture': false, 'price': false, 'open_hours': false, 'close_hours': false} %}
+	{% set columnsToShow = {'description': false, 'category': false, 'picture': false, 'price': false, 'openhours': false, 'closehours': false} %}
 
 	{# Dynamique de décision pour l'affichage des colonnes #}
 	{% for event in events %}
@@ -18,8 +18,8 @@
             'category': columnsToShow.category or event.category,
             'picture': columnsToShow.picture or event.picture,
             'price': columnsToShow.price or event.price,
-            'open_hours': columnsToShow.open_hours or event.open_hours,
-			'close_hours': columnsToShow.close_hours or event.close_hours,
+            'openhours': columnsToShow.openhours or event.openhours,
+			'closehours': columnsToShow.closehours or event.closehours,
         }) %}
 	{% endfor %}
 
@@ -42,10 +42,10 @@
 						{% if columnsToShow.price %}
 							<th>Prix</th>
 						{% endif %}
-						{% if columnsToShow.open_hours %}
+						{% if columnsToShow.openhours %}
 							<th>Heure d'ouverture</th>
 						{% endif %}
-						{% if columnsToShow.close_hours %}
+						{% if columnsToShow.closehours %}
 							<th>Heure de fermeture</th>
 						{% endif %}
 						<th></th>
@@ -68,12 +68,12 @@
 							{% if columnsToShow.price %}
 								<td>{{ event.price ? event.price ~ '' : 'N/A' }}</td>
 							{% endif %}
-							{% if columnsToShow.open_hours %}
-								<td>{{ event.open_hours ? event.open_hours|date('H:i:s') : 'N/A' }}</td>
+							{% if columnsToShow.openhours %}
+								<td>{{ event.openhours ? event.openhours|date('H:i:s') : 'N/A' }}</td>
 							{% endif %}
-							{% if columnsToShow.close_hours %}
-								<td>{{ event.close_hours ? event.close_hours|date('H:i:s') : 'N/A' }}</td>
-							{% endif %} 
+							{% if columnsToShow.closehours %}
+								<td>{{ event.closehours ? event.closehours|date('H:i:s') : 'N/A' }}</td>
+							{% endif %}
 							<td class="actions z-3">
 								<div class="dropdown">
 									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton{{ event.id }}" data-bs-toggle="dropdown" aria-expanded="false">
