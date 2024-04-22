@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Ambiance;
 use App\Entity\Category;
 use App\Entity\Event;
+use App\Entity\SpecialRegime;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -98,6 +100,38 @@ class EventType extends AbstractType
                     'class' => 'form-control mb-3',
                 ],
                 'required' => true,
+            ])
+
+            ->add('ambiance', EntityType::class, [
+                'class' => Ambiance::class,
+                'choice_label' => 'type',
+                'label' => 'Ambiance',
+                'placeholder' => 'Choisir une ambiance',
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank(
+                        ['message' => 'Remember to choose an ambiance']
+                    ),
+                ],
+                'attr' => [
+                    'class' => 'form-control mb-3',
+                ]
+            ])
+
+            ->add('specialRegime', EntityType::class, [
+                'class' => SpecialRegime::class,
+                'choice_label' => 'type',
+                'label' => 'Régime spécial',
+                'placeholder' => 'Choisir un régime spécial',
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank(
+                        ['message' => 'Remember to choose a special regime']
+                    ),
+                ],
+                'attr' => [
+                    'class' => 'form-control mb-3',
+                ]
             ])
 
             ->add('price', ChoiceType::class, [

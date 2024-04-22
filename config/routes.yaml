@@ -4,6 +4,10 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+admin_event_list:
+    path: /admin/event
+    controller: App\Controller\Admin\EventCrudController::index
+
 admin_category_list:
     path: /admin/category
     controller: App\Controller\Admin\CategoryCrudController::index

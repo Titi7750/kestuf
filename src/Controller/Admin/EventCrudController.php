@@ -33,11 +33,16 @@ class EventCrudController extends DashboardController
 
         if ($formEvent->isSubmitted() && $formEvent->isValid()) {
             $imageFile = $formEvent->get('picture')->getData();
+            $ambiances = $formEvent->get('ambiance')->getData();
+            $specialRegime = $formEvent->get('specialRegime')->getData();
 
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
                 $event->setPicture($imageFileName);
             }
+
+            $event->addAmbianceEvent($ambiances);
+            $event->addSpecialRegimeEvent($specialRegime);
 
             $entityManagerInterface->persist($event);
             $entityManagerInterface->flush();
@@ -79,11 +84,16 @@ class EventCrudController extends DashboardController
 
         if ($formEvent->isSubmitted() && $formEvent->isValid()) {
             $imageFile = $formEvent->get('picture')->getData();
+            $ambiances = $formEvent->get('ambiance')->getData();
+            $specialRegime = $formEvent->get('specialRegime')->getData();
 
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
                 $event->setPicture($imageFileName);
             }
+
+            $event->addAmbianceEvent($ambiances);
+            $event->addSpecialRegimeEvent($specialRegime);
 
             $entityManagerInterface->flush();
 
@@ -110,6 +120,10 @@ class EventCrudController extends DashboardController
         if (file_exists($file)) {
             unlink($file);
         }
+
+        // Supprimer l'ambiance & le régime spécial de l'événement
+        $event->removeAmbianceEvent($event->getAmbianceEvent());
+        $event->removeSpecialRegimeEvent($event->getSpecialRegimeEvent());
 
         $entityManagerInterface->remove($event);
         $entityManagerInterface->flush();

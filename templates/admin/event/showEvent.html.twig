@@ -32,6 +32,22 @@
 							<p>{{ event.category.type }}</p>
 						</div>
 					{% endif %}
+					{% if event.getAmbianceEvent() %}
+						<div class="form-group">
+							<label for="type">Ambiance de l'évènement</label>
+							{% for ambiance in event.getAmbianceEvent() %}
+								<p>{{ ambiance.type }}</p>
+							{% endfor %}
+						</div>
+					{% endif %}
+					{% if event.getSpecialRegimeEvent() %}
+						<div class="form-group">
+							<label for="type">Régime spécial de l'évènement</label>
+							{% for specialRegime in event.getSpecialRegimeEvent() %}
+								<p>{{ specialRegime.type }}</p>
+							{% endfor %}
+						</div>
+					{% endif %}
 					{% if (event.description) %}
 						<div class="form-group">
 							<label for="description">Description de l'évènement</label>
