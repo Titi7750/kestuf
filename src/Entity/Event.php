@@ -44,9 +44,17 @@ class Event
     #[ORM\JoinTable(name: 'user_event_favorite')]
     private Collection $user_event_favorite;
 
+    #[ORM\ManyToMany(targetEntity: Ambiance::class, mappedBy: 'event_ambiance')]
+    private Collection $ambiance_event;
+
+    #[ORM\ManyToMany(targetEntity: SpecialRegime::class, mappedBy: 'event_specialRegime')]
+    private Collection $specialRegime_event;
+
     public function __construct()
     {
         $this->user_event_favorite = new ArrayCollection();
+        $this->ambiance_event = new ArrayCollection();
+        $this->specialRegime_event = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -102,24 +110,24 @@ class Event
         return $this;
     }
 
-    public function getOpen_hours(): ?\DateTimeInterface
+    public function getOpenhours(): ?\DateTimeInterface
     {
         return $this->open_hours;
     }
 
-    public function setOpen_hours(?\DateTimeInterface $open_hours): static
+    public function setOpenhours(?\DateTimeInterface $open_hours): static
     {
         $this->open_hours = $open_hours;
 
         return $this;
     }
 
-    public function getClose_hours(): ?\DateTimeInterface
+    public function getClosehours(): ?\DateTimeInterface
     {
         return $this->close_hours;
     }
 
-    public function setClose_hours(?\DateTimeInterface $close_hours): static
+    public function setClosehours(?\DateTimeInterface $close_hours): static
     {
         $this->close_hours = $close_hours;
 
@@ -177,5 +185,53 @@ class Event
     public function isFavorite(User $user): bool
     {
         return $this->getUserEventFavorite()->contains($user);
+    }
+
+    /**
+     * @return Collection<int, Ambiance>
+     */
+    public function getAmbianceEvent(): Collection
+    {
+        return $this->ambiance_event;
+    }
+
+    public function addAmbianceEvent(Ambiance $ambianceEvent): static
+    {
+        if (!$this->ambiance_event->contains($ambianceEvent)) {
+            $this->ambiance_event->add($ambianceEvent);
+        }
+
+        return $this;
+    }
+
+    public function removeAmbianceEvent(Ambiance $ambianceEvent): static
+    {
+        $this->ambiance_event->removeElement($ambianceEvent);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SpecialRegime>
+     */
+    public function getSpecialRegimeEvent(): Collection
+    {
+        return $this->specialRegime_event;
+    }
+
+    public function addSpecialRegimeEvent(SpecialRegime $specialRegimeEvent): static
+    {
+        if (!$this->specialRegime_event->contains($specialRegimeEvent)) {
+            $this->specialRegime_event->add($specialRegimeEvent);
+        }
+
+        return $this;
+    }
+
+    public function removeSpecialRegimeEvent(SpecialRegime $specialRegimeEvent): static
+    {
+        $this->specialRegime_event->removeElement($specialRegimeEvent);
+
+        return $this;
     }
 }

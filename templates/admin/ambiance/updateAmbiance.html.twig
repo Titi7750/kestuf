@@ -1,0 +1,25 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Modification d'une ambiance
+{% endblock %}
+
+{% block page_actions %}
+	<a href="{{ path('admin_ambiance') }}" class="btn btn-secondary">
+		<i class="fa fa-reply"></i>
+		Retour à la liste des ambiances
+	</a>
+{% endblock %}
+
+{% block content_title %}Modification d'une ambiance
+{% endblock %}
+
+{% block main %}
+	<div class="container mt-5">
+		{{ form_start(formAmbiance, {'attr': {'novalidate': 'novalidate'}}) }}
+		{{ form_widget(formAmbiance) }}
+
+		<button type="submit" class="btn btn-primary btn-lg">Modifier</button>
+
+		{{ form_end(formAmbiance) }}
+	</div>
+{% endblock %}

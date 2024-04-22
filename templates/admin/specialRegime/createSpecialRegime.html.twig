@@ -1,0 +1,25 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Ajout d'un régime spécial
+{% endblock %}
+
+{% block page_actions %}
+	<a href="{{ path('admin_specialRegime') }}" class="btn btn-secondary">
+		<i class="fa fa-reply"></i>
+		Retour à la liste des régimes spéciaux
+	</a>
+{% endblock %}
+
+{% block content_title %}Ajout d'un régime spécial
+{% endblock %}
+
+{% block main %}
+	<div class="container mt-5">
+		{{ form_start(formSpecialRegime, {'attr': {'novalidate': 'novalidate'}}) }}
+		{{ form_widget(formSpecialRegime) }}
+
+		<button type="submit" class="btn btn-primary btn-lg">Ajouter</button>
+
+		{{ form_end(formSpecialRegime) }}
+	</div>
+{% endblock %}

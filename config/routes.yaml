@@ -7,3 +7,11 @@ controllers:
 admin_category_list:
     path: /admin/category
     controller: App\Controller\Admin\CategoryCrudController::index
+
+admin_ambiance_list:
+    path: /admin/ambiance
+    controller: App\Controller\Admin\AmbianceCrudController::index
+
+admin_specialRegime_list:
+    path: /admin/specialRegime
+    controller: App\Controller\Admin\SpecialRegimeCrudController::index

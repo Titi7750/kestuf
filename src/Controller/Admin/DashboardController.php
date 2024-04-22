@@ -28,8 +28,14 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToRoute('Retour à Kestuf\'', 'fas fa-home', 'app_homepage');
+
+        yield MenuItem::section('Gestion des utilisateurs');
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', User::class);
+
+        yield MenuItem::section('Gestion des évènements');
         yield MenuItem::linkToRoute('Évènements', 'fa fa-calendar', 'admin_event');
         yield MenuItem::linkToRoute('Catégories', 'fa fa-list', 'admin_category');
+        yield MenuItem::linkToRoute('Ambiances', 'fa fa-music', 'admin_ambiance');
+        yield MenuItem::linkToRoute('Régimes spéciaux', 'fa fa-star', 'admin_specialRegime');
     }
 }
