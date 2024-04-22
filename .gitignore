@@ -25,3 +25,7 @@
 ###< symfony/asset-mapper ###
 
 public/uploads/
+
+###> command/CreateUserDbCommand ###
+/src/Command/CreateUserDbCommand.php
+###< command/CreateUserDbCommand ###
