@@ -199,6 +199,7 @@ class Event
     {
         if (!$this->ambiance_event->contains($ambianceEvent)) {
             $this->ambiance_event->add($ambianceEvent);
+            $ambianceEvent->addEventAmbiance($this);
         }
 
         return $this;
@@ -206,7 +207,9 @@ class Event
 
     public function removeAmbianceEvent(Ambiance $ambianceEvent): static
     {
-        $this->ambiance_event->removeElement($ambianceEvent);
+        if ($this->ambiance_event->removeElement($ambianceEvent)) {
+            $ambianceEvent->removeEventAmbiance($this);
+        }
 
         return $this;
     }
@@ -223,6 +226,7 @@ class Event
     {
         if (!$this->specialRegime_event->contains($specialRegimeEvent)) {
             $this->specialRegime_event->add($specialRegimeEvent);
+            $specialRegimeEvent->addEventSpecialRegime($this);
         }
 
         return $this;
@@ -230,7 +234,9 @@ class Event
 
     public function removeSpecialRegimeEvent(SpecialRegime $specialRegimeEvent): static
     {
-        $this->specialRegime_event->removeElement($specialRegimeEvent);
+        if ($this->specialRegime_event->removeElement($specialRegimeEvent)) {
+            $specialRegimeEvent->removeEventSpecialRegime($this);
+        }
 
         return $this;
     }
