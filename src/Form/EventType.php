@@ -108,6 +108,8 @@ class EventType extends AbstractType
                 'label' => 'Ambiance',
                 'placeholder' => 'Choisir une ambiance',
                 'mapped' => false,
+                'expanded' => true,
+                'multiple' => true,
                 'constraints' => [
                     new NotBlank(
                         ['message' => 'Remember to choose an ambiance']
@@ -124,6 +126,8 @@ class EventType extends AbstractType
                 'label' => 'Régime spécial',
                 'placeholder' => 'Choisir un régime spécial',
                 'mapped' => false,
+                'expanded' => true,
+                'multiple' => true,
                 'constraints' => [
                     new NotBlank(
                         ['message' => 'Remember to choose a special regime']

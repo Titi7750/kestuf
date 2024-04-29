@@ -77,7 +77,7 @@ class EventCrudController extends DashboardController
     }
 
     #[Route('/admin/event/update/{id}', name: 'admin_event_update')]
-    public function updateEvent(Event $id, Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader, Localisator $localisator)
+    public function updateEvent(int $id, Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader, Localisator $localisator)
     {
         $event = $entityManagerInterface->getRepository(Event::class)->find($id);
 
@@ -89,22 +89,44 @@ class EventCrudController extends DashboardController
         $formEvent->handleRequest($request);
 
         if ($formEvent->isSubmitted() && $formEvent->isValid()) {
-            $imageFile = $formEvent->get('picture')->getData();
-            $ambiances = $formEvent->get('ambiance')->getData();
-            $specialRegime = $formEvent->get('specialRegime')->getData();
-
             $address = $formEvent->get('address')->getData();
             $coordinates = $localisator->getLocation($address);
             $event->setLongitude($coordinates[0]);
             $event->setLatitude($coordinates[1]);
 
+            $imageFile = $formEvent->get('picture')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
                 $event->setPicture($imageFileName);
             }
 
-            $event->addAmbianceEvent($ambiances);
-            $event->addSpecialRegimeEvent($specialRegime);
+            // Update ambiance
+            $selectedAmbiances = $formEvent->get('ambiance')->getData();
+            foreach ($event->getAmbianceEvent() as $existingAmbiance) {
+                if (!$selectedAmbiances->contains($existingAmbiance)) {
+                    $event->removeAmbianceEvent($existingAmbiance);
+                }
+            }
+
+            foreach ($selectedAmbiances as $newAmbiance) {
+                if (!$event->getAmbianceEvent()->contains($newAmbiance)) {
+                    $event->addAmbianceEvent($newAmbiance);
+                }
+            }
+
+            // Update special regime
+            $selectedSpecialRegime = $formEvent->get('specialRegime')->getData();
+            foreach ($event->getSpecialRegimeEvent() as $existingSpecialRegime) {
+                if (!$selectedSpecialRegime->contains($existingSpecialRegime)) {
+                    $event->removeSpecialRegimeEvent($existingSpecialRegime);
+                }
+            }
+
+            foreach ($selectedSpecialRegime as $newSpecialRegime) {
+                if (!$event->getSpecialRegimeEvent()->contains($newSpecialRegime)) {
+                    $event->addSpecialRegimeEvent($newSpecialRegime);
+                }
+            }
 
             $entityManagerInterface->flush();
 
@@ -128,7 +150,7 @@ class EventCrudController extends DashboardController
 
         // Supprimer image de l'événement
         $file = $this->getParameter('image_directory') . '/' . $event->getPicture();
-        if (file_exists($file)) {
+        if (file_exists($file) && !is_dir($file)) { // Check that the file exists and is not a directory
             unlink($file);
         }
 
