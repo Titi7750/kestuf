@@ -50,6 +50,12 @@ class Event
     #[ORM\ManyToMany(targetEntity: SpecialRegime::class, mappedBy: 'event_specialRegime')]
     private Collection $specialRegime_event;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $latitude = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $longitude = null;
+
     public function __construct()
     {
         $this->user_event_favorite = new ArrayCollection();
@@ -237,6 +243,30 @@ class Event
         if ($this->specialRegime_event->removeElement($specialRegimeEvent)) {
             $specialRegimeEvent->removeEventSpecialRegime($this);
         }
+
+        return $this;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?float $latitude): static
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): static
+    {
+        $this->longitude = $longitude;
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Event;
 use App\Form\EventType;
 use App\Services\FileUploader;
+use App\Services\Localisator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +25,7 @@ class EventCrudController extends DashboardController
     }
 
     #[Route('/admin/event/create', name: 'admin_event_create')]
-    public function createEvent(Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader)
+    public function createEvent(Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader, Localisator $localisator)
     {
         $event = new Event();
 
@@ -35,6 +36,11 @@ class EventCrudController extends DashboardController
             $imageFile = $formEvent->get('picture')->getData();
             $ambiances = $formEvent->get('ambiance')->getData();
             $specialRegime = $formEvent->get('specialRegime')->getData();
+
+            $address = $formEvent->get('address')->getData();
+            $coordinates = $localisator->getLocation($address);
+            $event->setLongitude($coordinates[0]);
+            $event->setLatitude($coordinates[1]);
 
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
@@ -71,7 +77,7 @@ class EventCrudController extends DashboardController
     }
 
     #[Route('/admin/event/update/{id}', name: 'admin_event_update')]
-    public function updateEvent(Event $id, Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader)
+    public function updateEvent(Event $id, Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader, Localisator $localisator)
     {
         $event = $entityManagerInterface->getRepository(Event::class)->find($id);
 
@@ -86,6 +92,11 @@ class EventCrudController extends DashboardController
             $imageFile = $formEvent->get('picture')->getData();
             $ambiances = $formEvent->get('ambiance')->getData();
             $specialRegime = $formEvent->get('specialRegime')->getData();
+
+            $address = $formEvent->get('address')->getData();
+            $coordinates = $localisator->getLocation($address);
+            $event->setLongitude($coordinates[0]);
+            $event->setLatitude($coordinates[1]);
 
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
@@ -120,10 +131,6 @@ class EventCrudController extends DashboardController
         if (file_exists($file)) {
             unlink($file);
         }
-
-        // Supprimer l'ambiance & le régime spécial de l'événement
-        $event->removeAmbianceEvent($event->getAmbianceEvent());
-        $event->removeSpecialRegimeEvent($event->getSpecialRegimeEvent());
 
         $entityManagerInterface->remove($event);
         $entityManagerInterface->flush();
