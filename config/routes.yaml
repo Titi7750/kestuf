@@ -19,3 +19,7 @@ admin_ambiance_list:
 admin_specialRegime_list:
     path: /admin/specialRegime
     controller: App\Controller\Admin\SpecialRegimeCrudController::index
+
+admin_comment_list:
+    path: /admin/comment
+    controller: App\Controller\Admin\CommentCrudController::index

@@ -56,11 +56,15 @@ class Event
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
+    #[ORM\OneToMany(targetEntity: CommentEvent::class, mappedBy: 'event_commentEvent', orphanRemoval: true)]
+    private Collection $commentEvent_event;
+
     public function __construct()
     {
         $this->user_event_favorite = new ArrayCollection();
         $this->ambiance_event = new ArrayCollection();
         $this->specialRegime_event = new ArrayCollection();
+        $this->commentEvent_event = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -267,6 +271,36 @@ class Event
     public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommentEvent>
+     */
+    public function getCommentEventEvent(): Collection
+    {
+        return $this->commentEvent_event;
+    }
+
+    public function addCommentEventEvent(CommentEvent $commentEventEvent): static
+    {
+        if (!$this->commentEvent_event->contains($commentEventEvent)) {
+            $this->commentEvent_event->add($commentEventEvent);
+            $commentEventEvent->setEventCommentEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentEventEvent(CommentEvent $commentEventEvent): static
+    {
+        if ($this->commentEvent_event->removeElement($commentEventEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($commentEventEvent->getEventCommentEvent() === $this) {
+                $commentEventEvent->setEventCommentEvent(null);
+            }
+        }
 
         return $this;
     }

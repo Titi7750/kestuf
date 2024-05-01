@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Évènement{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card card-primary card-outline">
+				<div class="card-header">
+					<h3 class="card-title">Détails de l'évènement</h3>
+				</div>
+				<div class="card-body">
+					<div class="form-group">
+						<label for="name">Nom de l'évènement</label>
+						<p>{{ event.name }}</p>
+					</div>
+					<div class="form-group">
+						<label for="address">Lieu de l'évènement</label>
+						<p>{{ event.address }}</p>
+					</div>
+					{% if (event.category) %}
+						<div class="form-group">
+							<label for="type">Catégorie de l'évènement</label>
+							<p>{{ event.category.type }}</p>
+						</div>
+					{% endif %}
+					{% if event.getAmbianceEvent() %}
+						<div class="form-group">
+							<label for="type">Ambiance de l'évènement</label>
+							{% for ambiance in event.getAmbianceEvent() %}
+								<p>{{ ambiance.type }}</p>
+							{% endfor %}
+						</div>
+					{% endif %}
+					{% if event.getSpecialRegimeEvent() %}
+						<div class="form-group">
+							<label for="type">Régime spécial de l'évènement</label>
+							{% for specialRegime in event.getSpecialRegimeEvent() %}
+								<p>{{ specialRegime.type }}</p>
+							{% endfor %}
+						</div>
+					{% endif %}
+					{% if (event.description) %}
+						<div class="form-group">
+							<label for="description">Description de l'évènement</label>
+							<p>{{ event.description }}</p>
+						</div>
+					{% endif %}
+					{% if (event.price) %}
+						<div class="form-group">
+							<label for="price">Prix de l'évènement</label>
+							<p>{{ event.price }}</p>
+						</div>
+					{% endif %}
+					{% if (event.openhours) %}
+						<div class="form-group">
+							<label for="date">Horaire de l'ouverture</label>
+							<p>{{ event.openhours|date('H:i:s') }}</p>
+						</div>
+					{% endif %}
+					{% if (event.closehours) %}
+						<div class="form-group">
+							<label for="date">Horaire de fermeture</label>
+							<p>{{ event.closehours|date('H:i:s') }}</p>
+						</div>
+					{% endif %}
+					<div class="form-group d-flex flex-column">
+						<label for="picture">Image de l'évènement</label>
+						<img class="w-50 h-50" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="{{ event.name }}">
+					</div>
+				</div>
+			</div>
+            <div>
+                <h2>Listes des commentaires</h2>
+                {% for comment in comments %}
+    				<div>
+						{% if comment.active == 1 %}
+       						<p>{{ comment.content }}</p>
+        					<p>Publié par {{ comment.getUserCommentEvent().firstname }} le {{ comment.getCreatedAt()|date('d/m/Y H:i:s') }}</p>
+						{% endif %}
+    				</div>
+				{% endfor %}
+            </div>
+            <div>
+                <h2>Ajouter un commentaire</h2>
+                {{form_start(commentForm)}}
+                {{form_widget(commentForm)}}
+                {{form_end(commentForm)}}
+            </div>
+		</div>
+	</div>
+{% endblock %}

@@ -37,5 +37,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('Catégories', 'fa fa-list', 'admin_category');
         yield MenuItem::linkToRoute('Ambiances', 'fa fa-music', 'admin_ambiance');
         yield MenuItem::linkToRoute('Régimes spéciaux', 'fa fa-star', 'admin_specialRegime');
+
+        yield MenuItem::section('Gestion des commentaires');
+        yield MenuItem::linkToRoute('Commentaires Évènements', 'fa fa-comment', 'admin_comment');
     }
 }

@@ -57,9 +57,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'user_event_favorite')]
     private Collection $event_user_favorite;
 
+    #[ORM\OneToMany(targetEntity: CommentEvent::class, mappedBy: 'user_commentEvent')]
+    private Collection $commentEvent_user;
+
     public function __construct()
     {
         $this->event_user_favorite = new ArrayCollection();
+        $this->commentEvent_user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -231,6 +235,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->event_user_favorite->removeElement($eventUserFavorite)) {
             $eventUserFavorite->removeUserEventFavorite($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommentEvent>
+     */
+    public function getCommentEventUser(): Collection
+    {
+        return $this->commentEvent_user;
+    }
+
+    public function addCommentEventUser(CommentEvent $commentEventUser): static
+    {
+        if (!$this->commentEvent_user->contains($commentEventUser)) {
+            $this->commentEvent_user->add($commentEventUser);
+            $commentEventUser->setUserCommentEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentEventUser(CommentEvent $commentEventUser): static
+    {
+        if ($this->commentEvent_user->removeElement($commentEventUser)) {
+            // set the owning side to null (unless already changed)
+            if ($commentEventUser->getUserCommentEvent() === $this) {
+                $commentEventUser->setUserCommentEvent(null);
+            }
         }
 
         return $this;

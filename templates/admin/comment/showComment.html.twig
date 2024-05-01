@@ -1,0 +1,56 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block title %}Détails du commentaire
+{% endblock %}
+
+{% block page_actions %}
+	<a href="{{ path('admin_category') }}" class="btn btn-secondary">
+		<i class="fa fa-reply"></i>
+		Retour à la liste des commentaires
+	</a>
+{% endblock %}
+
+{% block main %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card card-primary card-outline">
+				<div class="card-header">
+					<h3 class="card-title">Détails du commentaire</h3>
+				</div>
+				<div class="card-body">
+					<div class="form-group">
+						<label>Contenu du commentaire</label>
+						<p>{{ comment.content }}</p>
+					</div>
+                    <div class="form-group">
+						<label>Évènement</label>
+						<p>{{ comment.getEventCommentEvent().name }}</p>
+					</div>
+                    <div class="form-group">
+						<label>Utilisateur</label>
+						<p>{{ comment.getUserCommentEvent().firstname }}</p>
+					</div>
+                    <div class="form-group">
+						<label>Publié ?</label>
+						<p>{{ comment.active == 1 ? 'En ligne' : 'Brouillon' }}</p>
+					</div>
+                    <div class="form-group">
+						<label>Date de création</label>
+						<p>{{ comment.getCreatedAt()|date('d/m/Y H:i:s') }}</p>
+					</div>
+                    <div class="form-group">
+						{% if comment.active == 0 %}
+                            <a href="{{ path('admin_comment_publish', {'id': comment.id}) }}" class="btn btn-outline-primary">
+                                Mettre en ligne
+                            </a>
+                        {% else %}
+                            <a href="{{ path('admin_comment_unpublish', {'id': comment.id}) }}" class="btn btn-outline-danger">
+                                Mettre en brouillon
+                            </a>
+                        {% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
