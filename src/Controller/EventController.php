@@ -9,6 +9,7 @@ use App\Model\SearchData;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -62,5 +63,55 @@ class EventController extends AbstractController
             'commentForm' => $commentForm->createView(),
             'comments' => $comments,
         ]);
+    }
+
+    #[Route('/evenement/favoris/{id}', name: 'app_event_favorite')]
+    public function favoriteEvent(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $event = $eventRepository->find($id);
+        if (!$event) {
+            throw $this->createNotFoundException('Événement non trouvé.');
+        }
+
+        if ($user->getEventUserFavorite()->contains($event)) { // contains() est une méthode de Collection qui permet de vérifier si un élément est présent dans la collection
+            $user->removeEventUserFavorite($event);
+        } else {
+            $user->addEventUserFavorite($event);
+        }
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event_show', ['id' => $id]);
+    }
+
+    #[Route('/evenement/participer/{id}', name: 'app_event_participate')]
+    public function participateEvent(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $event = $eventRepository->find($id);
+        if (!$event) {
+            throw $this->createNotFoundException('Événement non trouvé.');
+        }
+
+        if ($user->getEventUserParticipant()->contains($event)) {
+            $user->removeEventUserParticipant($event);
+        } else {
+            $user->addEventUserParticipant($event);
+        }
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event_show', ['id' => $id]);
     }
 }

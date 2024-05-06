@@ -66,12 +66,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: CommentUser::class, mappedBy: 'user_receive_comment')]
     private Collection $user_receive_comment;
 
+    #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'user_event_participant')]
+    private Collection $event_user_participant;
+
     public function __construct()
     {
         $this->event_user_favorite = new ArrayCollection();
         $this->commentEvent_user = new ArrayCollection();
         $this->user_send_comment = new ArrayCollection();
         $this->user_receive_comment = new ArrayCollection();
+        $this->event_user_participant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -333,6 +337,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($userReceiveComment->getUserReceiveComment() === $this) {
                 $userReceiveComment->setUserReceiveComment(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEventUserParticipant(): Collection
+    {
+        return $this->event_user_participant;
+    }
+
+    public function addEventUserParticipant(Event $eventUserParticipant): static
+    {
+        if (!$this->event_user_participant->contains($eventUserParticipant)) {
+            $this->event_user_participant->add($eventUserParticipant);
+            $eventUserParticipant->addUserEventParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventUserParticipant(Event $eventUserParticipant): static
+    {
+        if ($this->event_user_participant->removeElement($eventUserParticipant)) {
+            $eventUserParticipant->removeUserEventParticipant($this);
         }
 
         return $this;

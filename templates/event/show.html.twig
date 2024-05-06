@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Évènement{% endblock %}
+{% block title %}Évènement
+{% endblock %}
 
 {% block body %}
 	<div class="row">
@@ -70,23 +71,36 @@
 					</div>
 				</div>
 			</div>
-            <div>
-                <h2>Listes des commentaires</h2>
-                {% for comment in comments %}
-    				<div>
+			{% if app.user and event in app.user.eventUserFavorite %}
+				<a href="{{ path('app_event_favorite', {'id': event.id}) }}" class="btn btn-danger">Retirer des favoris</a>
+			{% else %}
+				<a href="{{ path('app_event_favorite', {'id': event.id}) }}" class="btn btn-success">Ajouter aux favoris</a>
+			{% endif %}
+			{% if app.user and event in app.user.eventUserParticipant %}
+				<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn btn-danger">Se désinscrire</a>
+			{% else %}
+				<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn btn-primary">Participer</a>
+			{% endif %}
+			<div>
+				<h2>Listes des commentaires</h2>
+				{% for comment in comments %}
+					<div>
 						{% if comment.active == 1 %}
-       						<p>{{ comment.content }}</p>
-        					<p>Publié par {{ comment.getUserCommentEvent().firstname }} le {{ comment.getCreatedAt()|date('d/m/Y H:i:s') }}</p>
+							<p>{{ comment.content }}</p>
+							<p>Publié par
+								{{ comment.getUserCommentEvent().firstname }}
+								le
+								{{ comment.getCreatedAt()|date('d/m/Y H:i:s') }}</p>
 						{% endif %}
-    				</div>
+					</div>
 				{% endfor %}
-            </div>
-            <div>
-                <h2>Ajouter un commentaire</h2>
-                {{form_start(commentForm)}}
-                {{form_widget(commentForm)}}
-                {{form_end(commentForm)}}
-            </div>
+			</div>
+			<div>
+				<h2>Ajouter un commentaire</h2>
+				{{form_start(commentForm)}}
+				{{form_widget(commentForm)}}
+				{{form_end(commentForm)}}
+			</div>
 		</div>
 	</div>
 {% endblock %}

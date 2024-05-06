@@ -59,12 +59,17 @@ class Event
     #[ORM\OneToMany(targetEntity: CommentEvent::class, mappedBy: 'event_commentEvent', orphanRemoval: true)]
     private Collection $commentEvent_event;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'event_user_participant')]
+    #[ORM\JoinTable(name: 'user_event_participant')]
+    private Collection $user_event_participant;
+
     public function __construct()
     {
         $this->user_event_favorite = new ArrayCollection();
         $this->ambiance_event = new ArrayCollection();
         $this->specialRegime_event = new ArrayCollection();
         $this->commentEvent_event = new ArrayCollection();
+        $this->user_event_participant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -301,6 +306,30 @@ class Event
                 $commentEventEvent->setEventCommentEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUserEventParticipant(): Collection
+    {
+        return $this->user_event_participant;
+    }
+
+    public function addUserEventParticipant(User $userEventParticipant): static
+    {
+        if (!$this->user_event_participant->contains($userEventParticipant)) {
+            $this->user_event_participant->add($userEventParticipant);
+        }
+
+        return $this;
+    }
+
+    public function removeUserEventParticipant(User $userEventParticipant): static
+    {
+        $this->user_event_participant->removeElement($userEventParticipant);
 
         return $this;
     }
