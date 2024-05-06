@@ -1,0 +1,96 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Les commentaires des utilisateurs
+{% endblock %}
+
+{% block main %}
+	<div class="table-responsive z-3">
+		<table class="table table-hover">
+			<thead class="thead-light">
+				<tr>
+					<th>Contenu du commentaire</th>
+					<th>Utilisateur Reçu</th>
+					<th>Utilisateur Envoyé</th>
+					<th>Publié ?</th>
+					<th>Date</th>
+					<th>Le publier</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for commentUser in commentsUser %}
+					<tr>
+						<td>{{ commentUser.content }}</td>
+						<td>{{ commentUser.getUserReceiveComment().firstname }}</td>
+						<td>{{ commentUser.getUserSendComment().firstname }}</td>
+						<td>{{ commentUser.active == 1 ? 'En ligne' : 'Brouillon' }}</td>
+						<td>{{ commentUser.getCreatedAt()|date('d/m/Y H:i:s') }}</td>
+						<td>
+							{% if commentUser.active == 0 %}
+								<a href="{{ path('admin_commentUser_publish', {'id': commentUser.id}) }}" class="btn btn-outline-primary">
+									<i class="fa-solid fa-check"></i>
+								</a>
+							{% else %}
+								<a href="{{ path('admin_commentUser_unpublish', {'id': commentUser.id}) }}" class="btn btn-outline-danger">
+									<i class="fa-solid fa-times"></i>
+								</a>
+							{% endif %}
+						</td>
+						<td class="actions z-3">
+							<div class="dropdown">
+								<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton{{ commentUser.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+									Actions
+								</button>
+								<ul class="dropdown-menu z-3" aria-labelledby="dropdownMenuButton{{ commentUser.id }}">
+									<li>
+										<a class="dropdown-item" href="{{ path('admin_commentUser_show', {'id': commentUser.id}) }}">
+											<i class="fa-solid fa-eye"></i>
+											Voir
+										</a>
+									</li>
+									<li>
+										<a class="dropdown-item text-danger" href="{{ path('admin_commentUser_delete', {'id': commentUser.id}) }}" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ commentUser.id }}">
+											<i class="fa-solid fa-trash"></i>
+											Supprimer
+										</a>
+									</li>
+								</ul>
+							</div>
+							<!-- Modal for delete confirmation -->
+							<div class="modal fade" id="modal-delete-{{ commentUser.id }}" tabindex="-1" aria-labelledby="modalLabelDelete{{ commentUser.id }}" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="modalLabelDelete{{ commentUser.id }}">Confirmer la suppression</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											Êtes-vous sûr de vouloir supprimer cet élément ?
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+											<a href="{{ path('admin_commentUser_delete', {'id': commentUser.id}) }}" class="btn btn-danger">Supprimer</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block custom_styles %}
+	<style>
+		.table-hover tbody tr:hover {
+			background-color: #f5f5f5;
+		}
+
+		.btn-outline-primary,
+		.btn-outline-danger {
+			margin-right: 5px;
+		}
+	</style>
+{% endblock %}

@@ -4,7 +4,28 @@
 {% endblock %}
 
 {% block body %}
-	{{ app.user.firstname }}
-	{{ app.user.lastname }}
-	{{ app.user.email }}
+	{{ user.firstname }}
+	{{ user.lastname }}
+	{{ user.email }}
+
+	<div>
+		<h2>Listes des commentaires</h2>
+		{% for commentUser in comments %}
+			<div>
+				{% if commentUser.active == 1 %}
+					<p>{{ commentUser.content }}</p>
+					<p>Publié par
+						{{ commentUser.getUserSendComment().firstname }}
+						le
+						{{ commentUser.getCreatedAt()|date('d/m/Y H:i:s') }}</p>
+				{% endif %}
+			</div>
+		{% endfor %}
+	</div>
+	<div>
+		<h2>Ajouter un commentaire</h2>
+		{{form_start(commentForm)}}
+		{{form_widget(commentForm)}}
+		{{form_end(commentForm)}}
+	</div>
 {% endblock %}

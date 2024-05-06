@@ -23,3 +23,7 @@ admin_specialRegime_list:
 admin_comment_list:
     path: /admin/comment
     controller: App\Controller\Admin\CommentCrudController::index
+
+admin_comment_user_list:
+    path: /admin/commentuser
+    controller: App\Controller\Admin\CommentCrudController::index

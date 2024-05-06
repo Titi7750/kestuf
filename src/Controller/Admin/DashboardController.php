@@ -40,5 +40,6 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Gestion des commentaires');
         yield MenuItem::linkToRoute('Commentaires Évènements', 'fa fa-comment', 'admin_comment');
+        yield MenuItem::linkToRoute('Commentaires Utilisateurs', 'fa fa-comment', 'admin_commentUser');
     }
 }

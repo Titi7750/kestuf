@@ -60,10 +60,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: CommentEvent::class, mappedBy: 'user_commentEvent')]
     private Collection $commentEvent_user;
 
+    #[ORM\OneToMany(targetEntity: CommentUser::class, mappedBy: 'user_send_comment')]
+    private Collection $user_send_comment;
+
+    #[ORM\OneToMany(targetEntity: CommentUser::class, mappedBy: 'user_receive_comment')]
+    private Collection $user_receive_comment;
+
     public function __construct()
     {
         $this->event_user_favorite = new ArrayCollection();
         $this->commentEvent_user = new ArrayCollection();
+        $this->user_send_comment = new ArrayCollection();
+        $this->user_receive_comment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -264,6 +272,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($commentEventUser->getUserCommentEvent() === $this) {
                 $commentEventUser->setUserCommentEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommentUser>
+     */
+    public function getUserSendComment(): Collection
+    {
+        return $this->user_send_comment;
+    }
+
+    public function addUserSendComment(CommentUser $userSendComment): static
+    {
+        if (!$this->user_send_comment->contains($userSendComment)) {
+            $this->user_send_comment->add($userSendComment);
+            $userSendComment->setUserSendComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserSendComment(CommentUser $userSendComment): static
+    {
+        if ($this->user_send_comment->removeElement($userSendComment)) {
+            // set the owning side to null (unless already changed)
+            if ($userSendComment->getUserSendComment() === $this) {
+                $userSendComment->setUserSendComment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommentUser>
+     */
+    public function getUserReceiveComment(): Collection
+    {
+        return $this->user_receive_comment;
+    }
+
+    public function addUserReceiveComment(CommentUser $userReceiveComment): static
+    {
+        if (!$this->user_receive_comment->contains($userReceiveComment)) {
+            $this->user_receive_comment->add($userReceiveComment);
+            $userReceiveComment->setUserReceiveComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserReceiveComment(CommentUser $userReceiveComment): static
+    {
+        if ($this->user_receive_comment->removeElement($userReceiveComment)) {
+            // set the owning side to null (unless already changed)
+            if ($userReceiveComment->getUserReceiveComment() === $this) {
+                $userReceiveComment->setUserReceiveComment(null);
             }
         }
 
