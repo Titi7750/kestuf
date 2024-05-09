@@ -6,7 +6,6 @@ use App\Entity\Event;
 use App\Model\SearchData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Event>
@@ -18,17 +17,15 @@ use Knp\Component\Pager\PaginatorInterface;
  */
 class EventRepository extends ServiceEntityRepository
 {
-    private PaginatorInterface $paginator;
 
-    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Event::class);
-        $this->paginator = $paginator;
     }
 
     /**
      * Retrieves search-related events
-     * @return PaginatorInterface
+     * @return Event[]
      */
     public function findSearch(SearchData $searchData)
     {
@@ -37,6 +34,20 @@ class EventRepository extends ServiceEntityRepository
             ->join('e.category', 'c')
             ->innerJoin('e.ambiance_event', 'a')
             ->innerJoin('e.specialRegime_event', 's');
+
+        // if (!empty($searchData->latitude) && !empty($searchData->longitude)) {
+        //     $query = $query
+        //         ->andWhere('e.latitude = :latitude')
+        //         ->andWhere('e.longitude = :longitude')
+        //         ->setParameter('latitude', $searchData->latitude)
+        //         ->setParameter('longitude', $searchData->longitude);
+        // }
+
+        if (!empty($searchData->price)) {
+            $query = $query
+                ->andWhere('e.price IN (:price)')
+                ->setParameter('price', $searchData->price);
+        }
 
         if (!empty($searchData->category)) {
             $query = $query
@@ -68,11 +79,6 @@ class EventRepository extends ServiceEntityRepository
                 ->setParameter('specialRegime', $searchData->specialRegime_event);
         }
 
-        $query = $query->getQuery();
-        return $this->paginator->paginate(
-            $query,
-            1,
-            20
-        );
+        return $query->getQuery()->getResult();
     }
 }
