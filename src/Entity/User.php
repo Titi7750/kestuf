@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = [];
+    private array $roles = ['ROLE_USER'];
 
     /**
      * @var string The hashed password
@@ -69,6 +69,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'user_event_participant')]
     private Collection $event_user_participant;
 
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sendBy')]
+    private Collection $message_user;
+
+    #[ORM\OneToMany(targetEntity: Conversation::class, mappedBy: 'createdBy')]
+    private Collection $conversation_user;
+
+    #[ORM\ManyToMany(targetEntity: Conversation::class, mappedBy: 'participant')]
+    private Collection $participant_user;
+
     public function __construct()
     {
         $this->event_user_favorite = new ArrayCollection();
@@ -76,6 +85,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->user_send_comment = new ArrayCollection();
         $this->user_receive_comment = new ArrayCollection();
         $this->event_user_participant = new ArrayCollection();
+        $this->message_user = new ArrayCollection();
+        $this->conversation_user = new ArrayCollection();
+        $this->participant_user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -364,6 +376,93 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->event_user_participant->removeElement($eventUserParticipant)) {
             $eventUserParticipant->removeUserEventParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessageUser(): Collection
+    {
+        return $this->message_user;
+    }
+
+    public function addMessageUser(Message $messageUser): static
+    {
+        if (!$this->message_user->contains($messageUser)) {
+            $this->message_user->add($messageUser);
+            $messageUser->setSendBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessageUser(Message $messageUser): static
+    {
+        if ($this->message_user->removeElement($messageUser)) {
+            // set the owning side to null (unless already changed)
+            if ($messageUser->getSendBy() === $this) {
+                $messageUser->setSendBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getConversationUser(): Collection
+    {
+        return $this->conversation_user;
+    }
+
+    public function addConversationUser(Conversation $conversationUser): static
+    {
+        if (!$this->conversation_user->contains($conversationUser)) {
+            $this->conversation_user->add($conversationUser);
+            $conversationUser->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversationUser(Conversation $conversationUser): static
+    {
+        if ($this->conversation_user->removeElement($conversationUser)) {
+            // set the owning side to null (unless already changed)
+            if ($conversationUser->getCreatedBy() === $this) {
+                $conversationUser->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getParticipantUser(): Collection
+    {
+        return $this->participant_user;
+    }
+
+    public function addParticipantUser(Conversation $participantUser): static
+    {
+        if (!$this->participant_user->contains($participantUser)) {
+            $this->participant_user->add($participantUser);
+            $participantUser->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipantUser(Conversation $participantUser): static
+    {
+        if ($this->participant_user->removeElement($participantUser)) {
+            $participantUser->removeParticipant($this);
         }
 
         return $this;

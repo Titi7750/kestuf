@@ -19,20 +19,36 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $plainPassword = 'adminKestuf';
+        $roleAdmin = new User();
+        $plainPasswordAdmin = 'adminKestuf';
 
-        $user->setEmail('admin@kestuf.com');
-        $user->setFirstname('Admin');
-        $user->setLastname('Kestuf');
-        $user->setRoles(['ROLE_ADMIN']);
+        $roleAdmin->setEmail('admin@kestuf.com');
+        $roleAdmin->setFirstname('Admin');
+        $roleAdmin->setLastname('Kestuf');
+        $roleAdmin->setRoles(['ROLE_ADMIN']);
         $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            $plainPassword
+            $roleAdmin,
+            $plainPasswordAdmin
         );
-        $user->setPassword($hashedPassword);
+        $roleAdmin->setPassword($hashedPassword);
+        $manager->persist($roleAdmin);
 
-        $manager->persist($user);
+        for ($i = 1; $i <= 20; $i++) {
+            $plainPasswordUser = 'userKestuf' . $i;
+            $roleUser = new User();
+            $roleUser->setEmail('user' . $i . '@kestuf.com');
+            $roleUser->setFirstname('User' . $i);
+            $roleUser->setLastname('Kestuf');
+            $roleUser->setRoles(['ROLE_USER']);
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $roleUser,
+                $plainPasswordUser
+            );
+            $roleUser->setPassword($hashedPassword);
+            $manager->persist($roleUser);
+            $this->addReference('user-' . $i, $roleUser);
+        }
+
         $manager->flush();
     }
 }
