@@ -29,3 +29,6 @@ public/uploads/
 ###> command/CreateUserDbCommand ###
 /src/Command/CreateUserDbCommand.php
 ###< command/CreateUserDbCommand ###
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
