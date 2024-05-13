@@ -24,7 +24,7 @@ class UserFixtures extends Fixture
 
         $roleAdmin->setEmail('admin@kestuf.com');
         $roleAdmin->setFirstname('Admin');
-        $roleAdmin->setLastname('Kestuf');
+        $roleAdmin->setSurname('AdminKestuf');
         $roleAdmin->setRoles(['ROLE_ADMIN']);
         $hashedPassword = $this->passwordHasher->hashPassword(
             $roleAdmin,
@@ -38,7 +38,7 @@ class UserFixtures extends Fixture
             $roleUser = new User();
             $roleUser->setEmail('user' . $i . '@kestuf.com');
             $roleUser->setFirstname('User' . $i);
-            $roleUser->setLastname('Kestuf');
+            $roleUser->setSurname('Kestuf'. $i);
             $roleUser->setRoles(['ROLE_USER']);
             $hashedPassword = $this->passwordHasher->hashPassword(
                 $roleUser,

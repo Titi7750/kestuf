@@ -31,9 +31,7 @@ class EventRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('e')
             ->select('e', 'c')
-            ->join('e.category', 'c')
-            ->innerJoin('e.ambiance_event', 'a')
-            ->innerJoin('e.specialRegime_event', 's');
+            ->join('e.category', 'c');
 
         // if (!empty($searchData->latitude) && !empty($searchData->longitude)) {
         //     $query = $query
@@ -68,13 +66,13 @@ class EventRepository extends ServiceEntityRepository
         }
 
         if (!empty($searchData->ambiance_event)) {
-            $query = $query
+            $query->innerJoin('e.ambiance_event', 'a')
                 ->andWhere('a.id IN (:ambiance)')
                 ->setParameter('ambiance', $searchData->ambiance_event);
         }
 
         if (!empty($searchData->specialRegime_event)) {
-            $query = $query
+            $query->innerJoin('e.specialRegime_event', 's')
                 ->andWhere('s.id IN (:specialRegime)')
                 ->setParameter('specialRegime', $searchData->specialRegime_event);
         }

@@ -23,9 +23,12 @@ final class Version20240416204418 extends AbstractMigration
         $this->addSql('CREATE TABLE user_event_favorite (event_id INT NOT NULL, user_id INT NOT NULL, INDEX IDX_45ACB85071F7E88B (event_id), INDEX IDX_45ACB850A76ED395 (user_id), PRIMARY KEY(event_id, user_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE user_event_favorite ADD CONSTRAINT FK_45ACB85071F7E88B FOREIGN KEY (event_id) REFERENCES event (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE user_event_favorite ADD CONSTRAINT FK_45ACB850A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE event_user DROP FOREIGN KEY FK_92589AE271F7E88B');
-        $this->addSql('ALTER TABLE event_user DROP FOREIGN KEY FK_92589AE2A76ED395');
-        $this->addSql('DROP TABLE event_user');
+
+        if ($schema->hasTable('event_user')) {
+            $this->addSql('ALTER TABLE event_user DROP FOREIGN KEY FK_92589AE271F7E88B');
+            $this->addSql('ALTER TABLE event_user DROP FOREIGN KEY FK_92589AE2A76ED395');
+            $this->addSql('DROP TABLE event_user');
+        }
     }
 
     public function down(Schema $schema): void

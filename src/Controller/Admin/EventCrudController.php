@@ -47,8 +47,13 @@ class EventCrudController extends DashboardController
                 $event->setPicture($imageFileName);
             }
 
-            $event->addAmbianceEvent($ambiances);
-            $event->addSpecialRegimeEvent($specialRegime);
+            foreach ($ambiances as $ambiance) {
+                $event->addAmbianceEvent($ambiance);
+            }
+
+            foreach ($specialRegime as $special) {
+                $event->addSpecialRegimeEvent($special);
+            }
 
             $entityManagerInterface->persist($event);
             $entityManagerInterface->flush();
