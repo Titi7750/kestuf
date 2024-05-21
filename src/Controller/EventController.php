@@ -13,10 +13,12 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class EventController extends AbstractController
 {
-    #[Route('/', name: 'app_index')]
+    #[Route('/evenement', name: 'app_event')]
     public function index(EventRepository $eventRepository, Request $request): Response
     {
         $filterData = new SearchData();
@@ -62,6 +64,37 @@ class EventController extends AbstractController
             'event' => $event,
             'commentForm' => $commentForm->createView(),
             'comments' => $comments,
+        ]);
+    }
+
+    #[Route('/evenement/donner-commentaire/{id}', name: 'app_event_give_comment')]
+    public function giveCommentEvent(int $id, EventRepository $eventRepository, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $event = $eventRepository->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException('L\'événement n\'existe pas');
+        }
+
+        $newComment = new CommentEvent();
+        $commentForm = $this->createForm(CommentEventType::class, $newComment);
+        $commentForm->handleRequest($request);
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $newComment->setUserCommentEvent($this->getUser());
+            $newComment->setEventCommentEvent($event);
+            $newComment->setCreatedAt(new \DateTimeImmutable());
+            $entityManager->persist($newComment);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre commentaire a bien été ajouté');
+
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        }
+
+        return $this->render('event/give_comment.html.twig', [
+            'event' => $event,
+            'commentForm' => $commentForm->createView(),
         ]);
     }
 

@@ -1,106 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Évènement
+{% block title %}Évènement {{ event.name }} - Kestuf'
 {% endblock %}
 
 {% block body %}
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card card-primary card-outline">
-				<div class="card-header">
-					<h3 class="card-title">Détails de l'évènement</h3>
-				</div>
-				<div class="card-body">
-					<div class="form-group">
-						<label for="name">Nom de l'évènement</label>
-						<p>{{ event.name }}</p>
-					</div>
-					<div class="form-group">
-						<label for="address">Lieu de l'évènement</label>
-						<p>{{ event.address }}</p>
-					</div>
-					{% if (event.category) %}
-						<div class="form-group">
-							<label for="type">Catégorie de l'évènement</label>
-							<p>{{ event.category.type }}</p>
-						</div>
-					{% endif %}
-					{% if event.getAmbianceEvent() %}
-						<div class="form-group">
-							<label for="type">Ambiance de l'évènement</label>
-							{% for ambiance in event.getAmbianceEvent() %}
-								<p>{{ ambiance.type }}</p>
-							{% endfor %}
-						</div>
-					{% endif %}
-					{% if event.getSpecialRegimeEvent() %}
-						<div class="form-group">
-							<label for="type">Régime spécial de l'évènement</label>
-							{% for specialRegime in event.getSpecialRegimeEvent() %}
-								<p>{{ specialRegime.type }}</p>
-							{% endfor %}
-						</div>
-					{% endif %}
-					{% if (event.description) %}
-						<div class="form-group">
-							<label for="description">Description de l'évènement</label>
-							<p>{{ event.description }}</p>
-						</div>
-					{% endif %}
-					{% if (event.price) %}
-						<div class="form-group">
-							<label for="price">Prix de l'évènement</label>
-							<p>{{ event.price }}</p>
-						</div>
-					{% endif %}
-					{% if (event.openhours) %}
-						<div class="form-group">
-							<label for="date">Horaire de l'ouverture</label>
-							<p>{{ event.openhours|date('H:i:s') }}</p>
-						</div>
-					{% endif %}
-					{% if (event.closehours) %}
-						<div class="form-group">
-							<label for="date">Horaire de fermeture</label>
-							<p>{{ event.closehours|date('H:i:s') }}</p>
-						</div>
-					{% endif %}
-					<div class="form-group d-flex flex-column">
-						<label for="picture">Image de l'évènement</label>
-						<img class="w-50 h-50" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="{{ event.name }}">
-					</div>
+	<div class="text-center mt-5">
+		<a href="{{ path('app_event') }}">
+			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+		</a>
+	</div>
+	<div class="p-4">
+		<h2 class="color-main fs-36px fw-black text-center">Infos du spot</h2>
+		<div class="text-center">
+			<div class="d-flex justify-content-evenly align-items-center">
+				<h3 class="color-purple fs-24px fw-bold">{{ event.name }}</h3>
+				<div class="hollow-circle-heart">
+					<a href="{{ path('app_event_favorite', {'id': event.id}) }}">
+						<i class="fa-regular fa-heart heart-icon-show"></i>
+					</a>
 				</div>
 			</div>
-			{% if app.user and event in app.user.eventUserFavorite %}
+			<p>{{ event.description }}</p>
+			<img class="w-50 h-50 image-custom-show" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="{{ event.name }}">
+		</div>
+		<div>
+			<ul>
+				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
+					<div class="hollow-circle me-3">
+						<i class="fa-solid fa-martini-glass-citrus color-purple fs-24px"></i>
+					</div>
+					{{ event.category.type }}
+				</li>
+				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
+					<div class="hollow-circle me-3">
+						<i class="fa-solid fa-location-dot color-purple fs-24px"></i>
+					</div>
+					{{ event.address }}
+				</li>
+				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
+					<div class="hollow-circle me-3">
+						<i class="fa-solid fa-euro-sign color-purple fs-24px"></i>
+					</div>
+					{{ event.price }}
+				</li>
+				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
+					<div class="hollow-circle me-3">
+						<i class="fa-solid fa-train-subway color-purple fs-24px"></i>
+					</div>
+					{{ event.stopname }}
+				</li>
+				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
+					<div class="hollow-circle me-3">
+						<i class="fa-regular fa-clock color-purple fs-24px"></i>
+					</div>
+					{{ event.openhours|date('H:i') }}-{{ event.closehours|date('H:i') }}
+				</li>
+			</ul>
+		</div>
+		<div class="mb-3">
+			{% if app.user and event in app.user.eventUserParticipant %}
+				<div class="d-flex justify-content-center flex-wrap">
+					<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn btn-danger">Se désinscrire</a>
+					<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn btn-primary ms-3">Laisser un avis</a>
+				</div>
+			{% else %}
+				<div class="d-flex justify-content-center flex-wrap">
+					<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn btn-primary">Participer</a>
+					<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn btn-primary ms-3">Laisser un avis</a>
+				</div>
+			{% endif %}
+			{# {% if app.user and event in app.user.eventUserFavorite %}
 				<a href="{{ path('app_event_favorite', {'id': event.id}) }}" class="btn btn-danger">Retirer des favoris</a>
 			{% else %}
 				<a href="{{ path('app_event_favorite', {'id': event.id}) }}" class="btn btn-success">Ajouter aux favoris</a>
-			{% endif %}
-			{% if app.user and event in app.user.eventUserParticipant %}
-				<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn btn-danger">Se désinscrire</a>
-			{% else %}
-				<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn btn-primary">Participer</a>
-			{% endif %}
-			<div>
-				<h2>Listes des commentaires</h2>
-				{% for comment in comments %}
-					<div>
-						{% if comment.active == 1 %}
+			{% endif %} #}
+		</div>
+		<div class="cards-container">
+			{% for comment in comments %}
+				{% if comment.active == 1 %}
+					<div class="card">
+						<div class="card-content">
 							<p>{{ comment.content }}</p>
-							<p>Publié par
+							<p class="comment-info">Publié par
 								{{ comment.getUserCommentEvent().firstname }}
 								le
-								{{ comment.getCreatedAt()|date('d/m/Y H:i:s') }}</p>
-						{% endif %}
+								{{ comment.getCreatedAt()|date('d/m/Y') }}</p>
+						</div>
 					</div>
-				{% endfor %}
-			</div>
-			<div>
-				<h2>Ajouter un commentaire</h2>
-				{{form_start(commentForm)}}
-				{{form_widget(commentForm)}}
-				{{form_end(commentForm)}}
-			</div>
+				{% endif %}
+			{% endfor %}
 		</div>
 	</div>
 {% endblock %}

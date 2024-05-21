@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Page de bienvenue
+{% endblock %}
+
+{% block body %}
+	<body class="first-page">
+		<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en Orange"/>
+		<img class="mb-3" src="{{ asset('images/mascotte_white.png') }}" alt="Mascotte cornichon de Kestuf"/>
+		<h1 class="h3 mb-5 font-weight-normal color-main fw-black fs-36px text-center">Tu sors pas ? <span class="color-purple">Mais Kestuf'</span></h1>
+		<div class="d-flex flex-wrap">
+			<a href="{{ path('app_login') }}" class="btn me-3">Connecte-toi</a>
+			<a href="{{ path('app_register') }}" class="btn">Inscris-toi</a>
+		</div>
+	</body>
+{% endblock %}

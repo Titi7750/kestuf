@@ -4,22 +4,73 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Les évènements</h1>
 
-	<div>
+	{# <div>
 		{{ form_start(form) }}
 		{{ form_end(form) }}
+	</div> #}
+	<div class="text-center mt-5">
+		<a href="{{ path('app_event') }}">
+			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+		</a>
+	</div>
+	<p class="fw-regular fs-18px p-3">
+		On est là pour te filer un coup de main à dénicher le
+		<span class="color-purple fw-bold">spot insolite</span>
+		pour sortir. Mais attends, y'a plus ! Kestuf est aussi là pour te mettre en contact avec d'autres gens si tu veux pas te la jouer solo.
+	</p>
+
+	<h2 class="text-center color-main fw-black fs-36px">Le principe</h2>
+	<p class="fw-regular fs-18px p-3">
+		<span class="color-purple fw-bold">Parcours</span> les spots et trouve celui qui te branche.
+		<span class="color-purple fw-bold">Clique</span> dessus pour ouvrir sa fiche détaillée.
+		Si tu veux trouver des acolytes pour t'accompagner, cliques sur le bouton “<span class="color-purple fw-bold">Des rencontres ?</span>”
+		Une liste de personnes intéressées s'affichera alors et tu pourras choisir avec qui discuter et <span class="color-purple fw-bold">planifier ta sortie</span>.
+		Et après il te reste plus qu’à cliquer sur “<span class="color-purple fw-bold">Je veux y aller !</span>”
+	</p>
+
+	<h2 class="text-center color-main fw-black fs-36px">Alors tu sors ?</h2>
+
+	<div class="cards-container">
+		{% for event in events %}
+			<div class="card">
+				<a href="{{ path('app_event_show', {'id': event.id}) }}">
+					<div class="image-container">
+						<img class="image-card" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="Image de l'évènement {{ event.name }}">
+						<a href="{{ path('app_event_favorite', {'id': event.id}) }}" class="heart-link">
+							<i class="fa-regular fa-heart heart-icon"></i>
+						</a>
+						<div class="dot-under-heart"></div>
+					</div>
+					<div class="card-body">
+						<h2 class="card-title">{{ event.name }}</h2>
+						<p class="card-text">{{ event.description }}</p>
+					</div>
+					<div class="card-icons">
+						<span class="circle"></span>
+						<span class="circle"></span>
+						<span class="circle"></span>
+						<span class="circle"></span>
+					</div>
+				</a>
+			</div>
+		{% endfor %}
+	</div>
+	<div class="text-center my-5">
+		<a class="btn fs-18px" href="#">Viens trouver la pépite</a>
 	</div>
 
-	{% for event in events %}
-		<div>
-			<a href="{{ path('app_event_show', {'id': event.id}) }}">
-				<h2>{{ event.name }}</h2>
-			</a>
-		</div>
-		<div>
-			{% for e in event.category %}
-				<em>#{{ e.type }}</em>
-			{% endfor %}
-		{% endfor %}
-	{% endblock %}
+	{# <form action="{{ path('app_publish') }}" method="POST">
+		<textarea name="message"></textarea>
+		<button type="submit">Envoyer</button>
+	</form> #}
+{% endblock %}
+
+{# {% block javascripts %}
+	<script>
+		const eventSource = new EventSource("{{ mercure('http://example.com/chat')|escape('js') }}");
+		eventSource.onmessage = event => {
+			console.log(event.data);
+		}
+	</script>
+{% endblock %} #}

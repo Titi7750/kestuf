@@ -30,6 +30,7 @@
 					<tr>
 						<th>Nom de l'évènement</th>
 						<th>Adresse</th>
+						<th>Nom de l'arrêt</th>
 						{% if columnsToShow.description %}
 							<th>Description</th>
 						{% endif %}
@@ -56,6 +57,7 @@
 						<tr>
 							<td>{{ event.name }}</td>
 							<td>{{ event.address }}</td>
+							<td>{{ event.stopname }}</td>
 							{% if columnsToShow.description %}
 								<td>{{ event.description|default('N/A') }}</td>
 							{% endif %}

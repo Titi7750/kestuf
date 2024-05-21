@@ -22,6 +22,9 @@ class Event
     #[ORM\Column(length: 500)]
     private ?string $address = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $stop_name = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
@@ -97,6 +100,18 @@ class Event
     public function setAddress(string $address): static
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getStopName(): ?string
+    {
+        return $this->stop_name;
+    }
+
+    public function setStopName(string $stop_name): static
+    {
+        $this->stop_name = $stop_name;
 
         return $this;
     }

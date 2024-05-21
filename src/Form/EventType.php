@@ -59,6 +59,21 @@ class EventType extends AbstractType
                 ],
             ])
 
+            ->add('stop_name', TextType::class, [
+                'label' => 'Nom de l\'arrêt',
+                'constraints' => [
+                    new NotBlank(
+                        ['message' => 'Remember to enter a bus stop']
+                    ),
+                    new Length([
+                        'min' => 2,
+                    ])
+                ],
+                'attr' => [
+                    'class' => 'form-control mb-3',
+                ],
+            ])
+
             ->add('picture', FileType::class, [
                 'label' => 'Image',
                 'mapped' => false,
