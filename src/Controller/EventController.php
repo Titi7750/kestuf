@@ -10,6 +10,7 @@ use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -120,7 +121,28 @@ class EventController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_event_show', ['id' => $id]);
+        return $this->redirectToRoute('app_event');
+    }
+
+    #[Route('/evenement/disfavorite/{id}', name: 'app_event_disfavorite')]
+    public function disfavoriteEvent(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $event = $eventRepository->find($id);
+        if (!$event) {
+            throw $this->createNotFoundException('Événement non trouvé.');
+        }
+
+        $user->removeEventUserFavorite($event);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event');
     }
 
     #[Route('/evenement/participer/{id}', name: 'app_event_participate')]

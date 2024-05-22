@@ -4,13 +4,15 @@
 {% endblock %}
 
 {% block body %}
-	<body class="first-page">
-		<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en Orange"/>
+	<main class="container d-flex justify-content-center align-items-center flex-column p-2">
+		<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf en orange"/>
 		<img class="mb-3" src="{{ asset('images/mascotte_white.png') }}" alt="Mascotte cornichon de Kestuf"/>
-		<h1 class="h3 mb-5 font-weight-normal color-main fw-black fs-36px text-center">Tu sors pas ? <span class="color-purple">Mais Kestuf'</span></h1>
-		<div class="d-flex flex-wrap">
-			<a href="{{ path('app_login') }}" class="btn me-3">Connecte-toi</a>
-			<a href="{{ path('app_register') }}" class="btn">Inscris-toi</a>
+		<h1 class="h3 mb-5 font-weight-normal color-main fw-black fs-36px text-center">Tu sors pas ?
+			<span class="color-purple">Mais Kestuf'</span>
+		</h1>
+		<div class="d-flex flex-wrap justify-content-center link-container">
+			<a href="{{ path('app_login') }}" class="btn me-3 link-btn" aria-label="Lien pour se connecter">Connecte-toi</a>
+			<a href="{{ path('app_register') }}" class="btn link-btn" aria-label="Lien pour s'inscrire">Inscris-toi</a>
 		</div>
-	</body>
+	</main>
 {% endblock %}

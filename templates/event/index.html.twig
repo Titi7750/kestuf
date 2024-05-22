@@ -4,67 +4,94 @@
 {% endblock %}
 
 {% block body %}
-
-	{# <div>
-		{{ form_start(form) }}
-		{{ form_end(form) }}
-	</div> #}
-	<div class="text-center mt-5">
-		<a href="{{ path('app_event') }}">
+	<div class="container text-center mt-5">
+		<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">
 			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
 		</a>
 	</div>
-	<p class="fw-regular fs-18px p-3">
-		On est là pour te filer un coup de main à dénicher le
-		<span class="color-purple fw-bold">spot insolite</span>
-		pour sortir. Mais attends, y'a plus ! Kestuf est aussi là pour te mettre en contact avec d'autres gens si tu veux pas te la jouer solo.
-	</p>
+	<main class="container">
+		<p class="fw-regular fs-18px p-3">
+			On est là pour te filer un coup de main à dénicher le
+			<span class="color-purple fw-bold">spot insolite</span>
+			pour sortir. Mais attends, y'a plus ! Kestuf est aussi là pour te mettre en contact avec d'autres gens si tu veux pas te la jouer solo.
+		</p>
 
-	<h2 class="text-center color-main fw-black fs-36px">Le principe</h2>
-	<p class="fw-regular fs-18px p-3">
-		<span class="color-purple fw-bold">Parcours</span> les spots et trouve celui qui te branche.
-		<span class="color-purple fw-bold">Clique</span> dessus pour ouvrir sa fiche détaillée.
-		Si tu veux trouver des acolytes pour t'accompagner, cliques sur le bouton “<span class="color-purple fw-bold">Des rencontres ?</span>”
-		Une liste de personnes intéressées s'affichera alors et tu pourras choisir avec qui discuter et <span class="color-purple fw-bold">planifier ta sortie</span>.
-		Et après il te reste plus qu’à cliquer sur “<span class="color-purple fw-bold">Je veux y aller !</span>”
-	</p>
+		<h1 class="container text-center color-main fw-black fs-36px">Le principe</h1>
+		<p class="fw-regular fs-18px p-3">
+			<span class="color-purple fw-bold">Parcours</span>
+			les spots et trouve celui qui te branche.
+			<span class="color-purple fw-bold">Clique</span>
+			dessus pour ouvrir sa fiche détaillée.
+			Si tu veux trouver des acolytes pour t'accompagner, cliques sur le bouton “<span class="color-purple fw-bold">Des rencontres ?</span>”
+			Une liste de personnes intéressées s'affichera alors et tu pourras choisir avec qui discuter et
+			<span class="color-purple fw-bold">planifier ta sortie</span>.
+			Et après il te reste plus qu’à cliquer sur “<span class="color-purple fw-bold">Je veux y aller !</span>”
+		</p>
 
-	<h2 class="text-center color-main fw-black fs-36px">Alors tu sors ?</h2>
-
-	<div class="cards-container">
-		{% for event in events %}
-			<div class="card">
-				<a href="{{ path('app_event_show', {'id': event.id}) }}">
-					<div class="image-container">
-						<img class="image-card" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="Image de l'évènement {{ event.name }}">
-						<a href="{{ path('app_event_favorite', {'id': event.id}) }}" class="heart-link">
-							<i class="fa-regular fa-heart heart-icon"></i>
+		<h2 class="text-center color-main fw-black fs-36px">Alors tu sors ?</h2>
+		<div class="p-2">
+			<div class="cards-container">
+				{% for event in events %}
+					<div class="card">
+						<a href="{{ path('app_event_show', {'id': event.id}) }}" aria-label="Voir les détails de l'évènement {{ event.name }}">
+							<div class="image-container">
+								<img class="image-card" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="Image de l'évènement {{ event.name }}">
+								{% if app.user and event in app.user.eventUserFavorite %}
+									<a href="{{ path('app_event_disfavorite', {'id': event.id}) }}" aria-label="Retirer l'évènement {{ event.name }} de vos favoris">
+										<i class="fa-solid fa-heart heart-icon-solid color-main"></i>
+									</a>
+								{% else %}
+									<a href="{{ path('app_event_favorite', {'id': event.id}) }}" aria-label="Ajouter l'évènement {{ event.name }} à vos favoris">
+										<i class="fa-regular fa-heart heart-icon"></i>
+									</a>
+								{% endif %}
+								<div class="dot-under-heart"></div>
+							</div>
+							<div class="card-body">
+								<h2 class="card-title">{{ event.name }}</h2>
+								<p class="card-text">{{ event.description }}</p>
+							</div>
+							<div class="card-icons">
+								<div>
+									<span class="hollow-circle">
+										<i class="fa-solid fa-location-dot color-purple fs-24px" aria-hidden="true"></i>
+										<span class="sr-only">Lieu</span>
+									</span>
+								</div>
+								<span class="hollow-circle">
+									<i class="fa-solid fa-martini-glass-citrus color-purple fs-24px" aria-hidden="true"></i>
+									<span class="sr-only">Boissons</span>
+								</span>
+								<div class="d-flex justify-content-center align-items-center flex-column">
+									<span class="hollow-circle">
+										<i class="fa-solid fa-euro-sign color-purple fs-24px" aria-hidden="true"></i>
+										<span class="sr-only">Coût</span>
+									</span>
+								</div>
+								<span class="hollow-circle">
+									<i class="fa-solid fa-train-subway color-purple fs-24px" aria-hidden="true"></i>
+									<span class="sr-only">Transport</span>
+								</span>
+							</div>
 						</a>
-						<div class="dot-under-heart"></div>
 					</div>
-					<div class="card-body">
-						<h2 class="card-title">{{ event.name }}</h2>
-						<p class="card-text">{{ event.description }}</p>
-					</div>
-					<div class="card-icons">
-						<span class="circle"></span>
-						<span class="circle"></span>
-						<span class="circle"></span>
-						<span class="circle"></span>
-					</div>
-				</a>
+				{% endfor %}
 			</div>
-		{% endfor %}
-	</div>
-	<div class="text-center my-5">
-		<a class="btn fs-18px" href="#">Viens trouver la pépite</a>
-	</div>
-
-	{# <form action="{{ path('app_publish') }}" method="POST">
-		<textarea name="message"></textarea>
-		<button type="submit">Envoyer</button>
-	</form> #}
+		</div>
+		<div class="text-center my-5">
+			<a class="btn fs-18px" href="#" aria-label="Trouver des lieux insolites">Viens trouver la pépite</a>
+		</div>
+	</main>
 {% endblock %}
+{# <div>
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+</div> #}
+
+{# <form action="{{ path('app_publish') }}" method="POST">
+	<textarea name="message"></textarea>
+	<button type="submit">Envoyer</button>
+</form> #}
 
 {# {% block javascripts %}
 	<script>

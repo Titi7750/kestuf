@@ -1,79 +1,85 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Évènement {{ event.name }} - Kestuf'
+{% block title %}Évènement
+	{{ event.name }}
+	- Kestuf'
 {% endblock %}
 
 {% block body %}
-	<div class="text-center mt-5">
-		<a href="{{ path('app_event') }}">
-			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+	<div class="container text-center mt-5">
+		<a href="{{ path('app_event') }}" aria-label="Retour à la liste des événements">
+			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo de Kestuf en orange">
 		</a>
 	</div>
-	<div class="p-4">
-		<h2 class="color-main fs-36px fw-black text-center">Infos du spot</h2>
-		<div class="text-center">
-			<div class="d-flex justify-content-evenly align-items-center">
-				<h3 class="color-purple fs-24px fw-bold">{{ event.name }}</h3>
+	<main class="container">
+		<h1 class="color-main fs-36px fw-black text-center">Infos du spot</h1>
+		<div class="p-2">
+			<div class="d-flex justify-content-between align-items-center">
+				<h2 class="color-purple fs-24px fw-bold">{{ event.name }}</h2>
 				<div class="hollow-circle-heart">
-					<a href="{{ path('app_event_favorite', {'id': event.id}) }}">
-						<i class="fa-regular fa-heart heart-icon-show"></i>
-					</a>
+					{% if app.user and event in app.user.eventUserFavorite %}
+						<a href="{{ path('app_event_disfavorite', {'id': event.id}) }}" aria-label="Retirer des favoris">
+							<i class="fa-solid fa-heart heart-icon-show"></i>
+						</a>
+					{% else %}
+						<a href="{{ path('app_event_favorite', {'id': event.id}) }}" aria-label="Ajouter aux favoris">
+							<i class="fa-regular fa-heart heart-icon-show"></i>
+						</a>
+					{% endif %}
 				</div>
 			</div>
 			<p>{{ event.description }}</p>
-			<img class="w-50 h-50 image-custom-show" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="{{ event.name }}">
+			<img class="image-custom-show" src="{{ asset('uploads/images/' ~ event.picture) }}" alt="Image de {{ event.name }}">
 		</div>
 		<div>
-			<ul>
+			<ul class="d-flex-custom justify-content-custom-evenly flex-wrap p-3" role="list">
 				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
 					<div class="hollow-circle me-3">
-						<i class="fa-solid fa-martini-glass-citrus color-purple fs-24px"></i>
+						<i class="fa-solid fa-martini-glass-citrus color-purple fs-24px" aria-hidden="true"></i>
 					</div>
-					{{ event.category.type }}
+					<p>{{ event.category.type }}</p>
 				</li>
 				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
 					<div class="hollow-circle me-3">
-						<i class="fa-solid fa-location-dot color-purple fs-24px"></i>
+						<i class="fa-solid fa-location-dot color-purple fs-24px" aria-hidden="true"></i>
 					</div>
-					{{ event.address }}
+					<p>{{ event.address }}</p>
 				</li>
 				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
 					<div class="hollow-circle me-3">
-						<i class="fa-solid fa-euro-sign color-purple fs-24px"></i>
+						<i class="fa-solid fa-euro-sign color-purple fs-24px" aria-hidden="true"></i>
 					</div>
-					{{ event.price }}
+					<p>{{ event.price }}</p>
 				</li>
 				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
 					<div class="hollow-circle me-3">
-						<i class="fa-solid fa-train-subway color-purple fs-24px"></i>
+						<i class="fa-solid fa-train-subway color-purple fs-24px" aria-hidden="true"></i>
 					</div>
-					{{ event.stopname }}
+					<p>{{ event.stopname }}</p>
 				</li>
 				<li class="list-style-none d-flex align-items-center fs-18px fw-regular mb-3">
 					<div class="hollow-circle me-3">
-						<i class="fa-regular fa-clock color-purple fs-24px"></i>
+						<i class="fa-regular fa-clock color-purple fs-24px" aria-hidden="true"></i>
 					</div>
-					{{ event.openhours|date('H:i') }}-{{ event.closehours|date('H:i') }}
+					<p>{{ event.openhours|date('H:i') }}
+						-
+						{{ event.closehours|date('H:i') }}</p>
 				</li>
 			</ul>
 		</div>
-		<div class="mb-3">
+		<div class="p-5 mb-3">
 			{% if app.user and event in app.user.eventUserParticipant %}
-				<div class="d-flex justify-content-center flex-wrap">
-					<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn btn-danger">Se désinscrire</a>
-					<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn btn-primary ms-3">Laisser un avis</a>
+				<div class="d-flex justify-content-center flex-wrap link-container">
+					<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn link-btn" aria-label="Se désinscrire de l'événement">En fait non !</a>
+					<a href="#" class="btn ms-3 link-btn" aria-label="Voir les personnes intéressées">Personnes intéressés</a>
+					<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Laisser un avis">Laisser un avis</a>
 				</div>
 			{% else %}
-				<div class="d-flex justify-content-center flex-wrap">
-					<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn btn-primary">Participer</a>
-					<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn btn-primary ms-3">Laisser un avis</a>
+				<div class="d-flex justify-content-center flex-wrap link-container">
+					<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn link-btn" aria-label="Participer à l'événement">Rencontres ?</a>
+					<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Laisser un avis">Laisser un avis</a>
 				</div>
 			{% endif %}
-			{# {% if app.user and event in app.user.eventUserFavorite %}
-				<a href="{{ path('app_event_favorite', {'id': event.id}) }}" class="btn btn-danger">Retirer des favoris</a>
-			{% else %}
-				<a href="{{ path('app_event_favorite', {'id': event.id}) }}" class="btn btn-success">Ajouter aux favoris</a>
-			{% endif %} #}
 		</div>
 		<div class="cards-container">
 			{% for comment in comments %}
@@ -90,5 +96,5 @@
 				{% endif %}
 			{% endfor %}
 		</div>
-	</div>
+	</main>
 {% endblock %}

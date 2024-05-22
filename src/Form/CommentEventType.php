@@ -22,7 +22,7 @@ class CommentEventType extends AbstractType
                 ],
             ])
             ->add('rgpd', CheckboxType::class, [
-                'label' => 'J\'accepte que mes informations soient stockées dans la base de données de kestuf',
+                'label' => 'J\'accepte que mes informations soient stockées',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',

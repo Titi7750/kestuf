@@ -4,44 +4,62 @@
 {% endblock %}
 
 {% block body %}
-	<div class="text-center mt-5">
-		<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+	<div class="container text-center mt-5">
+		<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">
+			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+		</a>
 	</div>
 
-	<h2 class="text-center color-main fw-black fs-36px">Tes pépites</h2>
-
-	<div class="cards-container">
-		{% if favorites is empty %}
-			<div class="text-center mt-5">
-				<p class="fs-18px">Tu n'as pas encore de pépites</p>
-			</div>
-		{% endif %}
-		{% for favorite in favorites %}
-			<div class="card">
-				<a href="{{ path('app_event_show', {'id': favorite.id}) }}">
-					<div class="image-container">
-						<img class="image-card" src="{{ asset('uploads/images/' ~ favorite.picture) }}" alt="Image de l'évènement {{ favorite.name }}">
-						<a href="{{ path('app_event_favorite', {'id': favorite.id}) }}" class="heart-link">
-							<i class="fa-regular fa-heart heart-icon"></i>
+	<main class="container">
+		<h1 class="text-center color-main fw-black fs-36px">Tes pépites</h1>
+		<div class="p-2">
+			<div class="cards-container">
+				{% if favorites is empty %}
+					<div class="text-center mt-5">
+						<p class="fs-18px">Tu n'as pas encore de pépites</p>
+					</div>
+				{% endif %}
+				{% for favorite in favorites %}
+					<div class="card">
+						<a href="{{ path('app_event_show', {'id': favorite.id}) }}" aria-label="Voir les détails de l'évènement {{ favorite.name }}">
+							<div class="image-container">
+								<img class="image-card" src="{{ asset('uploads/images/' ~ favorite.picture) }}" alt="Image de l'évènement {{ favorite.name }}">
+								{% if app.user in app.user.eventUserFavorite %}
+									<a href="{{ path('app_event_disfavorite', {'id': favorite.id}) }}" aria-label="Retirer l'évènement {{ favorite.name }} de vos favoris">
+										<i class="fa-solid fa-heart heart-icon"></i>
+									</a>
+								{% endif %}
+								<div class="dot-under-heart"></div>
+							</div>
+							<div class="card-body">
+								<h2 class="card-title">{{ favorite.name }}</h2>
+								<p class="card-text">{{ favorite.description }}</p>
+							</div>
+							<div class="card-icons">
+								<span class="hollow-circle">
+									<i class="fa-solid fa-location-dot color-purple fs-24px" aria-hidden="true"></i>
+									<span class="sr-only">Lieu</span>
+								</span>
+								<span class="hollow-circle">
+									<i class="fa-solid fa-martini-glass-citrus color-purple fs-24px" aria-hidden="true"></i>
+									<span class="sr-only">Boissons</span>
+								</span>
+								<span class="hollow-circle">
+									<i class="fa-solid fa-euro-sign color-purple fs-24px" aria-hidden="true"></i>
+									<span class="sr-only">Coût</span>
+								</span>
+								<span class="hollow-circle">
+									<i class="fa-solid fa-train-subway color-purple fs-24px" aria-hidden="true"></i>
+									<span class="sr-only">Transport</span>
+								</span>
+							</div>
 						</a>
-						<div class="dot-under-heart"></div>
 					</div>
-					<div class="card-body">
-						<h2 class="card-title">{{ favorite.name }}</h2>
-						<p class="card-text">{{ favorite.description }}</p>
-					</div>
-					<div class="card-icons">
-						<span class="circle"></span>
-						<span class="circle"></span>
-						<span class="circle"></span>
-						<span class="circle"></span>
-					</div>
-				</a>
+				{% endfor %}
 			</div>
-		{% endfor %}
-	</div>
-
-	<div class="text-center my-5">
-		<a class="btn fs-18px" href="#">Trouves en d'autres</a>
-	</div>
+		</div>
+		<div class="text-center my-5">
+			<a class="btn fs-18px" href="#" aria-label="Trouver d'autres événements">Trouves en d'autres</a>
+		</div>
+	</main>
 {% endblock %}
