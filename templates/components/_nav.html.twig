@@ -1,0 +1,35 @@
+{% block body %}
+	<nav>
+		<div class="container">
+			<div class="nav-container">
+				<div class="burger-menu" id="burger-menu">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<ul class="nav-links" id="nav-links">
+					<li>
+						<i class="fa-solid fa-house color-main me-3"></i>
+						<a class="fw-bold fs-18px" href="{{ path('app_event') }}" aria-label="Voir la page d'accueil">Accueil</a>
+					</li>
+					<li>
+						<i class="fa-solid fa-magnifying-glass color-main me-3"></i>
+						<a class="fw-bold fs-18px" href="{{ path('app_map') }}" aria-label="Aller à la page de recherche">Recherche</a>
+					</li>
+					<li>
+						<i class="fa-regular fa-comments color-main me-3"></i>
+						<a class="fw-bold fs-18px" href="#" aria-label="Aller à la page message">Message</a>
+					</li>
+					<li>
+						<i class="fa-solid fa-heart color-main me-3"></i>
+						<a class="fw-bold fs-18px" href="{{ path('app_favorite') }}" aria-label="Voir la page favoris">Favoris</a>
+					</li>
+					<li>
+						<i class="fa-regular fa-user color-main me-3"></i>
+						<a class="fw-bold fs-18px" href="#" aria-label="Aller à la page profil">Profil</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+{% endblock %}

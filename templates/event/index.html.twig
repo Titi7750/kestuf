@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block body %}
+	{% include 'components/_nav.html.twig' %}
 	<div class="container text-center mt-5">
 		<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">
 			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
@@ -83,10 +84,6 @@
 		</div>
 	</main>
 {% endblock %}
-{# <div>
-    {{ form_start(form) }}
-    {{ form_end(form) }}
-</div> #}
 
 {# <form action="{{ path('app_publish') }}" method="POST">
 	<textarea name="message"></textarea>

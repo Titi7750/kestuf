@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block body %}
+	{% include 'components/_nav.html.twig' %}
 	<main class="container mt-5 p-2">
 		<div class="text-center mb-4">
 			<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">

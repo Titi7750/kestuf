@@ -1,0 +1,28 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Carte
+{% endblock %}
+
+{% block body %}
+	{% include 'components/_nav.html.twig' %}
+	<div class="container text-center mt-5">
+		<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">
+			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+		</a>
+	</div>
+
+	<main class="container">
+		<h1 class="text-center color-main fw-black fs-36px">Cherche un spot</h1>
+		<a href="#">Filtrer</a>
+
+		<div class="p-2">
+			<div id="map"></div>
+		</div>
+
+		<div class="p-5 mb-3">
+			<div class="d-flex justify-content-center flex-wrap link-container">
+				<a href="{{ path('app_favorite') }}" class="btn ms-3 link-btn" aria-label="Tes favoris">Tes favoris</a>
+			</div>
+		</div>
+	</main>
+{% endblock %}

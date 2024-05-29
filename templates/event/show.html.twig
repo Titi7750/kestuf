@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block body %}
+	{% include 'components/_nav.html.twig' %}
 	<div class="container text-center mt-5">
 		<a href="{{ path('app_event') }}" aria-label="Retour à la liste des événements">
 			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo de Kestuf en orange">

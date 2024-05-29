@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Form\FilterType;
+use App\Model\SearchData;
+use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -31,6 +35,27 @@ class DefaultController extends AbstractController
 
         return $this->render('event/favorite_list.html.twig', [
             'favorites' => $favorites,
+        ]);
+    }
+
+    #[Route('/carte', name: 'app_map')]
+    public function map(): Response
+    {
+        return $this->render('filter/map.html.twig');
+    }
+
+    #[Route('/filtrer', name: 'app_filtrer')]
+    public function filter(EventRepository $eventRepository, Request $request): Response
+    {
+        $filterData = new SearchData();
+        $form = $this->createForm(FilterType::class, $filterData);
+        $form->handleRequest($request);
+
+        $events = $eventRepository->findSearch($filterData);
+
+        return $this->render('event/index.html.twig', [
+            'events' => $events,
+            'form' => $form->createView(),
         ]);
     }
 }
