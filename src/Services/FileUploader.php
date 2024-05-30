@@ -26,12 +26,7 @@ class FileUploader
 
         // Déplacer le fichier dans le répertoire où sont stockées les images
         try {
-            if (!file_exists($this->getTargetDirectory())) {
-                mkdir($this->getTargetDirectory(), 0777, true);
-                $file->move($this->getTargetDirectory(), $fileName);
-            } else {
-                $file->move($this->getTargetDirectory(), $fileName);
-            }
+            $file->move($this->getTargetDirectory(), $fileName);
         } catch (FileException $e) {
             throw new FileException($e->getMessage());
         }
