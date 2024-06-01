@@ -13,6 +13,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DefaultController extends AbstractController
 {
+    /**
+     * Display homepage
+     *
+     * @return Response
+     */
     #[Route('/', name: 'app_welcome')]
     public function index(): Response
     {
@@ -23,6 +28,12 @@ class DefaultController extends AbstractController
         return $this->render('index.html.twig');
     }
 
+    /**
+     * Display favorites events
+     *
+     * @param Security $security
+     * @return Response
+     */
     #[Route('/mes-favoris', name: 'app_favorite')]
     public function favorites(Security $security): Response
     {
@@ -38,12 +49,24 @@ class DefaultController extends AbstractController
         ]);
     }
 
+    /**
+     * Display map
+     *
+     * @return Response
+     */
     #[Route('/carte', name: 'app_map')]
     public function map(): Response
     {
         return $this->render('filter/map.html.twig');
     }
 
+    /**
+     * Filter events
+     *
+     * @param EventRepository $eventRepository
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/filtrer', name: 'app_filtrer')]
     public function filter(EventRepository $eventRepository, Request $request): Response
     {

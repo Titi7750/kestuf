@@ -1,31 +1,44 @@
 <?php
 
+// src/Controller/EventController.php
 namespace App\Controller;
 
 use App\Entity\CommentEvent;
 use App\Form\CommentEventType;
 use App\Form\FilterType;
 use App\Model\SearchData;
-use App\Repository\EventRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\EventService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
 class EventController extends AbstractController
 {
+    private $eventService;
+
+    public function __construct(EventService $eventService)
+    {
+        $this->eventService = $eventService;
+    }
+
+    /**
+     * Display all events
+     *
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/evenement', name: 'app_event')]
-    public function index(EventRepository $eventRepository, Request $request): Response
+    public function index(Request $request): Response
     {
         $filterData = new SearchData();
         $form = $this->createForm(FilterType::class, $filterData);
         $form->handleRequest($request);
 
-        $events = $eventRepository->findSearch($filterData);
+        $events = $this->eventService->getFilteredEvents($filterData);
 
         return $this->render('event/index.html.twig', [
             'events' => $events,
@@ -33,28 +46,29 @@ class EventController extends AbstractController
         ]);
     }
 
+    /**
+     * Display an event
+     *
+     * @param integer $id
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/evenement/{id}', name: 'app_event_show')]
-    public function showEvent(EventRepository $eventRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function showEvent(int $id, Request $request): Response
     {
-        $event = $eventRepository->find($request->get('id'));
+        $event = $this->eventService->getEventById($id);
 
         if (!$event) {
             throw $this->createNotFoundException('L\'événement n\'existe pas');
         }
 
         $comments = $event->getCommentEventEvent();
-
         $newComment = new CommentEvent();
         $commentForm = $this->createForm(CommentEventType::class, $newComment);
         $commentForm->handleRequest($request);
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $newComment->setUserCommentEvent($this->getUser());
-            $newComment->setEventCommentEvent($event);
-            $newComment->setCreatedAt(new \DateTimeImmutable());
-            $entityManager->persist($newComment);
-            $entityManager->flush();
-
+            $this->eventService->addComment($event, $this->getUser(), $newComment);
             $this->addFlash('success', 'Votre commentaire a bien été ajouté');
 
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
@@ -67,10 +81,17 @@ class EventController extends AbstractController
         ]);
     }
 
+    /**
+     * Give a comment to an event
+     *
+     * @param integer $id
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/evenement/donner-commentaire/{id}', name: 'app_event_give_comment')]
-    public function giveCommentEvent(int $id, EventRepository $eventRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function giveCommentEvent(int $id, Request $request): Response
     {
-        $event = $eventRepository->find($id);
+        $event = $this->eventService->getEventById($id);
 
         if (!$event) {
             throw $this->createNotFoundException('L\'événement n\'existe pas');
@@ -81,12 +102,7 @@ class EventController extends AbstractController
         $commentForm->handleRequest($request);
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $newComment->setUserCommentEvent($this->getUser());
-            $newComment->setEventCommentEvent($event);
-            $newComment->setCreatedAt(new \DateTimeImmutable());
-            $entityManager->persist($newComment);
-            $entityManager->flush();
-
+            $this->eventService->addComment($event, $this->getUser(), $newComment);
             $this->addFlash('success', 'Votre commentaire a bien été ajouté');
 
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
@@ -98,73 +114,77 @@ class EventController extends AbstractController
         ]);
     }
 
+    /**
+     * Add an event to favorites
+     *
+     * @param integer $id
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/evenement/favoris/{id}', name: 'app_event_favorite')]
-    public function favoriteEvent(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager, Security $security): Response
+    public function favoriteEvent(int $id, Security $security): Response
     {
         $user = $security->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
-        $event = $eventRepository->find($id);
+        $event = $this->eventService->getEventById($id);
         if (!$event) {
             throw $this->createNotFoundException('Événement non trouvé.');
         }
 
-        if ($user->getEventUserFavorite()->contains($event)) { // contains() est une méthode de Collection qui permet de vérifier si un élément est présent dans la collection
-            $user->removeEventUserFavorite($event);
-        } else {
-            $user->addEventUserFavorite($event);
-        }
-
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->eventService->toggleFavorite($user, $event);
 
         return $this->redirectToRoute('app_event');
     }
 
+    /**
+     * Remove an event from favorites
+     *
+     * @param integer $id
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/evenement/disfavorite/{id}', name: 'app_event_disfavorite')]
-    public function disfavoriteEvent(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager, Security $security): Response
+    public function disfavoriteEvent(int $id, Security $security): Response
     {
         $user = $security->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
-        $event = $eventRepository->find($id);
+        $event = $this->eventService->getEventById($id);
         if (!$event) {
             throw $this->createNotFoundException('Événement non trouvé.');
         }
 
-        $user->removeEventUserFavorite($event);
-
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->eventService->toggleFavorite($user, $event);
 
         return $this->redirectToRoute('app_event');
     }
 
+    /**
+     * Participate in an event
+     *
+     * @param integer $id
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/evenement/participer/{id}', name: 'app_event_participate')]
-    public function participateEvent(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager, Security $security): Response
+    public function participateEvent(int $id, Security $security): Response
     {
         $user = $security->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
-        $event = $eventRepository->find($id);
+        $event = $this->eventService->getEventById($id);
         if (!$event) {
             throw $this->createNotFoundException('Événement non trouvé.');
         }
 
-        if ($user->getEventUserParticipant()->contains($event)) {
-            $user->removeEventUserParticipant($event);
-        } else {
-            $user->addEventUserParticipant($event);
-        }
-
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->eventService->toggleParticipation($user, $event);
 
         return $this->redirectToRoute('app_event_show', ['id' => $id]);
     }

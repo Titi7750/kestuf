@@ -28,6 +28,16 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
+    /**
+     * Register a new user
+     *
+     * @param Request $request
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @param Security $security
+     * @param EntityManagerInterface $entityManager
+     * @param FileUploader $fileUploader
+     * @return Response
+     */
     #[Route('/inscription', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
     {
@@ -77,6 +87,14 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    /**
+     * Verify user email
+     *
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param TranslatorInterface $translator
+     * @return Response
+     */
     #[Route('/verification/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator): Response
     {

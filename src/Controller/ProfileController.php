@@ -6,22 +6,35 @@ use App\Entity\CommentUser;
 use App\Entity\User;
 use App\Form\CommentUserType;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
+use App\Services\ProfileService;
 use App\Services\FileUploader;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
 class ProfileController extends AbstractController
 {
-    #[Route('/profil/{firstname}', name: 'app_profile')]
-    public function index(string $firstname, UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
+    private $profileService;
+
+    public function __construct(ProfileService $profileService)
     {
-        $user = $userRepository->findOneBy(['firstname' => $firstname]);
+        $this->profileService = $profileService;
+    }
+
+    /**
+     * Display user profile
+     *
+     * @param string $firstname
+     * @param Request $request
+     * @return Response
+     */
+    #[Route('/profil/{firstname}', name: 'app_profile')]
+    public function index(string $firstname, Request $request): Response
+    {
+        $user = $this->profileService->getUserByFirstname($firstname);
 
         if (!$user) {
             throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
@@ -34,12 +47,7 @@ class ProfileController extends AbstractController
         $commentForm->handleRequest($request);
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $newComment->setUserSendComment($this->getUser());
-            $newComment->setUserReceiveComment($user);
-            $newComment->setCreatedAt(new \DateTimeImmutable());
-            $entityManager->persist($newComment);
-            $entityManager->flush();
-
+            $this->profileService->addComment($user, $this->getUser(), $newComment);
             $this->addFlash('success', 'Votre commentaire a bien été ajouté');
 
             return $this->redirectToRoute('app_profile', ['firstname' => $user->getFirstname()]);
@@ -52,9 +60,16 @@ class ProfileController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Update user profile
+     *
+     * @param User $user
+     * @param Request $request
+     * @param FileUploader $fileUploader
+     * @return Response
+     */
     #[Route('/profil/{id}', name: 'app_profile_update')]
-    public function profilUpdate(User $user, Request $request, EntityManagerInterface $entityManagerInterface, FileUploader $fileUploader): Response
+    public function profilUpdate(User $user, Request $request, FileUploader $fileUploader): Response
     {
         $formProfile = $this->createForm(RegistrationFormType::class, $user);
         $formProfile->handleRequest($request);
@@ -67,14 +82,14 @@ class ProfileController extends AbstractController
                 $user->setPicture($imageFileName);
             }
 
-            $entityManagerInterface->flush();
+            $this->profileService->updateUser($user);
 
             $this->addFlash('success', 'L\'utilisateur a bien été modifié');
-            return $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('app_profile', ['firstname' => $user->getFirstname()]);
         }
 
         return $this->render('profile/updateProfile.html.twig', [
-            'formProfile' => $formProfile
+            'formProfile' => $formProfile->createView(),
         ]);
     }
 }

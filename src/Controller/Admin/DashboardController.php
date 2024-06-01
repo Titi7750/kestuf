@@ -13,18 +13,31 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractDashboardController
 {
+    /**
+     * @Route("/admin", name="admin")
+     */
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
         return $this->render('admin/dashboard.html.twig');
     }
 
+    /**
+     * Configure the dashboard
+     *
+     * @return Dashboard
+     */
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
             ->setTitle('Kestuf\'');
     }
 
+    /**
+     * Configure the menu of the dashboard
+     *
+     * @return iterable
+     */
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToRoute('Retour à Kestuf\'', 'fas fa-home', 'app_event');

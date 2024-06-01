@@ -1,10 +1,9 @@
 <?php
 
+// src/Controller/Admin/SpecialRegimeCrudController.php
 namespace App\Controller\Admin;
 
-use App\Entity\SpecialRegime;
-use App\Form\SpecialRegimeType;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\Admin\AdminSpecialRegimeService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -12,41 +11,59 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class SpecialRegimeCrudController extends DashboardController
 {
-    #[Route('/admin/specialRegime', name: 'admin_specialRegime')]
-    public function listSpecialRegime(EntityManagerInterface $entityManagerInterface)
+    private $adminSpecialRegimeService;
+
+    public function __construct(AdminSpecialRegimeService $adminSpecialRegimeService)
     {
-        $specialRegimes = $entityManagerInterface->getRepository(SpecialRegime::class)->findAll();
+        $this->adminSpecialRegimeService = $adminSpecialRegimeService;
+    }
+
+    /**
+     * Display special regime list
+     *
+     * @return Response
+     */
+    #[Route('/admin/specialRegime', name: 'admin_specialRegime')]
+    public function listSpecialRegime()
+    {
+        $specialRegimes = $this->adminSpecialRegimeService->listSpecialRegimes();
 
         return $this->render('admin/specialRegime/specialRegime.html.twig', [
             'specialRegimes' => $specialRegimes
         ]);
     }
 
+    /**
+     * Create special regime
+     *
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/admin/specialRegime/create', name: 'admin_specialRegime_create')]
-    public function createSpecialRegime(Request $request, EntityManagerInterface $entityManagerInterface)
+    public function createSpecialRegime(Request $request)
     {
-        $specialRegime = new SpecialRegime();
+        $result = $this->adminSpecialRegimeService->createSpecialRegime($request);
 
-        $formSpecialRegime = $this->createForm(SpecialRegimeType::class, $specialRegime);
-        $formSpecialRegime->handleRequest($request);
-
-        if ($formSpecialRegime->isSubmitted() && $formSpecialRegime->isValid()) {
-            $entityManagerInterface->persist($specialRegime);
-            $entityManagerInterface->flush();
-
+        if ($result['success']) {
             $this->addFlash('success', 'Le régime spécial a bien été ajouté');
             return $this->redirectToRoute('admin_specialRegime');
         }
 
         return $this->render('admin/specialRegime/createSpecialRegime.html.twig', [
-            'formSpecialRegime' => $formSpecialRegime
+            'formSpecialRegime' => $result['form']->createView()
         ]);
     }
 
+    /**
+     * Display special regime
+     *
+     * @param integer $id
+     * @return Response
+     */
     #[Route('/admin/specialRegime/show/{id}', name: 'admin_specialRegime_show')]
-    public function showSpecialRegime($id, EntityManagerInterface $entityManagerInterface)
+    public function showSpecialRegime(int $id)
     {
-        $specialRegime = $entityManagerInterface->getRepository(SpecialRegime::class)->find($id);
+        $specialRegime = $this->adminSpecialRegimeService->getSpecialRegimeById($id);
 
         if (!$specialRegime) {
             throw $this->createNotFoundException('Le régime spécial n\'existe pas');
@@ -57,43 +74,44 @@ class SpecialRegimeCrudController extends DashboardController
         ]);
     }
 
+    /**
+     * Update special regime
+     *
+     * @param integer $id
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/admin/specialRegime/update/{id}', name: 'admin_specialRegime_update')]
-    public function updateSpecialRegimeForm($id, Request $request, EntityManagerInterface $entityManagerInterface)
+    public function updateSpecialRegimeForm(int $id, Request $request)
     {
-        $specialRegime = $entityManagerInterface->getRepository(SpecialRegime::class)->find($id);
+        $result = $this->adminSpecialRegimeService->updateSpecialRegime($id, $request);
 
-        if (!$specialRegime) {
-            throw $this->createNotFoundException('Le régime spécial n\'existe pas');
-        }
-
-        $formSpecialRegime = $this->createForm(SpecialRegimeType::class, $specialRegime);
-        $formSpecialRegime->handleRequest($request);
-
-        if ($formSpecialRegime->isSubmitted() && $formSpecialRegime->isValid()) {
-            $entityManagerInterface->flush();
-
+        if ($result['success']) {
             $this->addFlash('success', 'Le régime spécial a bien été modifié');
             return $this->redirectToRoute('admin_specialRegime');
         }
 
         return $this->render('admin/specialRegime/updateSpecialRegime.html.twig', [
-            'formSpecialRegime' => $formSpecialRegime
+            'formSpecialRegime' => $result['form']->createView()
         ]);
     }
 
+    /**
+     * Delete special regime
+     *
+     * @param integer $id
+     * @return Response
+     */
     #[Route('/admin/specialRegime/delete/{id}', name: 'admin_specialRegime_delete')]
-    public function deleteSpecialRegime($id, EntityManagerInterface $entityManagerInterface)
+    public function deleteSpecialRegime(int $id)
     {
-        $specialRegime = $entityManagerInterface->getRepository(SpecialRegime::class)->find($id);
-
-        if (!$specialRegime) {
-            throw $this->createNotFoundException('Le régime spécial n\'existe pas');
+        try {
+            $this->adminSpecialRegimeService->deleteSpecialRegime($id);
+            $this->addFlash('success', 'Le régime spécial a bien été supprimé');
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
         }
 
-        $entityManagerInterface->remove($specialRegime);
-        $entityManagerInterface->flush();
-
-        $this->addFlash('success', 'Le régime spécial a bien été supprimé');
         return $this->redirectToRoute('admin_specialRegime');
     }
 }
