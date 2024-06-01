@@ -1,31 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!
+{% block title %}Profil de
+	{{ user.firstname }}
+	{{ user.surname }}
 {% endblock %}
 
 {% block body %}
-	{{ user.firstname }}
-	{{ user.surname }}
-	{{ user.email }}
-
-	<div>
-		<h2>Listes des commentaires</h2>
-		{% for commentUser in comments %}
-			<div>
-				{% if commentUser.active == 1 %}
-					<p>{{ commentUser.content }}</p>
-					<p>Publié par
-						{{ commentUser.getUserSendComment().firstname }}
-						le
-						{{ commentUser.getCreatedAt()|date('d/m/Y H:i:s') }}</p>
+	{% include 'components/_nav.html.twig' %}
+	<div class="container text-center mt-5">
+		<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">
+			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+		</a>
+	</div>
+	<main class="container p-2">
+		<h1 class="color-main fw-black fs-36px">Salut Kestufeur !</h1>
+		<div class="d-flex align-items-center">
+			{% if user.picture == null %}
+				<div class="upload-circle me-3" id="upload-circle">
+					<i class="fa-solid fa-user"></i>
+				</div>
+			{% else %}
+				<img class="image-profile me-3" src="{{ asset('uploads/images/' ~ user.picture) }}" alt="Image de profil de {{ user.firstname }} {{ user.surname }}">
+			{% endif %}
+			<p class="color-purple fw-bold fs-20px me-3">{{ user.firstname }}</p>
+			<a href="{{ path('app_profile_update', {'surname': user.surname}) }}" aria-label="Modifier le profil">
+				<i class="fa-solid fa-pen-to-square"></i>
+			</a>
+		</div>
+		<h2 class="color-main fw-black fs-36px">Tes badges</h2>
+		<p class="color-purple fw-bold fs-20px">Aucun badge pour le moment !</p>
+		<h2 class="color-main fw-black fs-36px">Tes sorties</h2>
+		<p class="color-purple fw-bold fs-20px">Aucune sortie pour le moment !</p>
+		<p class="color-blue fw-bold fs-20px">N’oublies pas de scanner le QR code quand tu te rends au spot !</p>
+		<div class="d-flex justify-content-center flex-wrap link-container">
+			<a class="btn ms-3 link-btn" href="{{ path('app_map') }}" aria-label="Trouver des lieux insolites">Cherches un spot</a>
+			{% if app.user and user.id != app.user.id %}
+				<a href="{{ path('app_profile_give_comment', {'surname': user.surname}) }}" class="btn ms-3 link-btn" aria-label="Laisser un avis">Laisser un avis</a>
+			{% endif %}
+		</div>
+		<div class="cards-container mt-5">
+			{% for comment in comments %}
+				{% if comment.active == 1 %}
+					<div class="card">
+						<div class="card-content">
+							<p>{{ comment.content }}</p>
+							<p class="comment-info">Publié par
+								{{ comment.getUserSendComment().firstname }}
+								le
+								{{ comment.getCreatedAt()|date('d/m/Y') }}</p>
+						</div>
+					</div>
 				{% endif %}
-			</div>
-		{% endfor %}
-	</div>
-	<div>
-		<h2>Ajouter un commentaire</h2>
-		{{form_start(commentForm)}}
-		{{form_widget(commentForm)}}
-		{{form_end(commentForm)}}
-	</div>
+			{% endfor %}
+		</div>
+	</main>
 {% endblock %}
+{# <div>
+	<h2>Ajouter un commentaire</h2>
+	{{form_start(commentForm)}}
+	{{form_widget(commentForm)}}
+	{{form_end(commentForm)}}
+</div> #}

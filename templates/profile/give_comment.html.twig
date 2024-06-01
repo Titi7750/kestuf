@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Donner un avis sur la personne
+{% endblock %}
+
+{% block body %}
+	{% include 'components/_nav.html.twig' %}
+	<main class="container mt-5 p-2">
+		<div class="text-center mb-4">
+			<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">
+				<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf en orange" class="logo">
+			</a>
+		</div>
+		<div class="form-container">
+			<h1 class="color-purple text-center mb-4">Ajouter un commentaire</h1>
+			<div class="form-content">
+				{{ form_start(commentForm) }}
+				{{ form_widget(commentForm) }}
+				{{ form_end(commentForm) }}
+			</div>
+		</div>
+	</main>
+{% endblock %}

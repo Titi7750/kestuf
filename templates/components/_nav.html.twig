@@ -26,7 +26,11 @@
 					</li>
 					<li>
 						<i class="fa-regular fa-user color-main me-3"></i>
-						<a class="fw-bold fs-18px" href="#" aria-label="Aller à la page profil">Profil</a>
+						<a class="fw-bold fs-18px" href="{{ path('app_profile', {'surname': user.surname}) }}" aria-label="Aller à la page profil">Profil</a>
+					</li>
+					<li>
+						<i class="fa-solid fa-door-open color-main me-3"></i>
+						<a class="fw-bold fs-18px" href="{{ path('app_logout') }}" aria-label="Se déconnecter">Déconnexion</a>
 					</li>
 				</ul>
 			</div>

@@ -1,23 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block page_title %}Modification
+{% block title %}Modifier le profil
 {% endblock %}
 
-{% block page_actions %}
-	<a href="{{ path('app_profile') }}" class="btn btn-secondary">
-		<i class="fa fa-reply"></i>
-		Retour à mon profil
-	</a>
-{% endblock %}
+{% block body %}
+	{% include 'components/_nav.html.twig' %}
+	<h1 class="text-center">Modifier le profil</h1>
 
-{% block content_title %}Modification
-{% endblock %}
+	{{ form_start(formProfile, {'attr': {'class': 'form', 'enctype': 'multipart/form-data'}}) }}
 
-{% block main %}
-<h1>Modification</h1>
-	<div class="container mt-5">
-		{{ form_start(formProfile) }}
-		{{ form_widget(formProfile) }}
-		{{ form_end(formProfile) }}
+	<div id="upload-section" class="d-flex justify-content-center align-items-baseline">
+		<div class="upload-container">
+			{{ form_widget(formProfile.picture, {'attr':{'class':'form-control mb-3', 'id': 'picture-upload', 'style': 'display:none', 'onchange': 'previewImage(event)'}}) }}
+			<label for="picture-upload" class="upload-label">
+				<div class="upload-circle" id="upload-circle">
+					<i class="fa-solid fa-camera"></i>
+				</div>
+			</label>
+			<img id="image-preview" src="{{ user.picture ? asset('uploads/images/' ~ user.picture) : '#' }}" alt="Prévisualisation de votre image" style="display: {{ user.picture ? 'block' : 'none' }}; border-radius: 50%; width: 80px; height: 80px;">
+			{{ form_errors(formProfile.picture) }}
+		</div>
+		{{ form_label(formProfile.picture, 'Mets ta plus belle photo', {'label_attr':{'class':'fw-regular fs-18px ms-2'}}) }}
 	</div>
+
+	{{ form_label(formProfile.firstname, 'Ton prénom', {'label_attr':{'class':'fw-regular fs-18px'}}) }}
+	<div class="d-flex justify-content-center align-items-center flex-column">
+		{{ form_widget(formProfile.firstname, {'attr':{'class':'form-control mb-3', 'placeholder':'Prénom'}}) }}
+		{{ form_errors(formProfile.firstname) }}
+	</div>
+
+	{{ form_label(formProfile.surname, 'Un petit surnom', {'label_attr':{'class':'fw-regular fs-18px'}}) }}
+	<div class="d-flex justify-content-center align-items-center flex-column">
+		{{ form_widget(formProfile.surname, {'attr':{'class':'form-control mb-3', 'placeholder':'Surnom'}}) }}
+		{{ form_errors(formProfile.surname) }}
+	</div>
+
+	{{ form_label(formProfile.email, 'Ton adresse mail', {'label_attr':{'class':'fw-regular fs-18px'}}) }}
+	<div class="d-flex justify-content-center align-items-center flex-column">
+		{{ form_widget(formProfile.email, {'attr':{'class':'form-control mb-3', 'placeholder':'Adresse mail'}}) }}
+		{{ form_errors(formProfile.email) }}
+	</div>
+
+	{{ form_label(formProfile.plainPassword, 'Ton mot de passe', {'label_attr':{'class':'fw-regular fs-18px'}}) }}
+	<div class="d-flex justify-content-center align-items-center flex-column">
+		{{ form_widget(formProfile.plainPassword, {'attr':{'class':'form-control mb-3', 'placeholder':'Laissez vide si inchangé' }}) }}
+		{{ form_errors(formProfile.plainPassword) }}
+	</div>
+
+	<div class="d-flex align-items-center mb-3">
+		{{ form_widget(formProfile.agreeTerms) }}
+		{{ form_label(formProfile.agreeTerms,'', {'label_attr':{'class':'fw-regular fs-14px'}}) }}
+		{{ form_errors(formProfile.agreeTerms) }}
+	</div>
+
+	<div class="d-flex justify-content-center align-items-center flex-column link-container">
+		<button type="submit" class="btn fw-bold fs-20px link-btn w-100" aria-label="Modifier">Modifier</button>
+	</div>
+	<a class="fw-bold fs-14px" href="{{ path('app_profile', {'surname': user.surname}) }}" aria-label="Lien pour retourner à son profil">Retour au profil</a>
+
+	{{ form_end(formProfile) }}
 {% endblock %}

@@ -46,6 +46,7 @@ class DefaultController extends AbstractController
 
         return $this->render('event/favorite_list.html.twig', [
             'favorites' => $favorites,
+            'user' => $this->getUser(),
         ]);
     }
 
@@ -57,7 +58,9 @@ class DefaultController extends AbstractController
     #[Route('/carte', name: 'app_map')]
     public function map(): Response
     {
-        return $this->render('filter/map.html.twig');
+        return $this->render('filter/map.html.twig', [
+            'user' => $this->getUser(),
+        ]);
     }
 
     /**

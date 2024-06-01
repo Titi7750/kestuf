@@ -62,9 +62,15 @@
 					<div class="hollow-circle me-3">
 						<i class="fa-regular fa-clock color-purple fs-24px" aria-hidden="true"></i>
 					</div>
-					<p>{{ event.openhours|date('H:i') }}
-						-
-						{{ event.closehours|date('H:i') }}</p>
+					<p>
+						{% if event.openhours == null or event.closehours == null %}
+							Non renseigné
+						{% else %}
+							{{ event.openhours|date('H:i') }}
+							-
+							{{ event.closehours|date('H:i') }}
+						{% endif %}
+					</p>
 				</li>
 			</ul>
 		</div>
