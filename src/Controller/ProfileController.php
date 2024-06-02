@@ -77,6 +77,11 @@ class ProfileController extends AbstractController
             throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
         }
 
+        $currentUser = $this->getUser();
+        if ($currentUser->getId() !== $user->getId()) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier ce profil');
+        }
+
         $formProfile = $this->createForm(UpdateProfileType::class, $user);
         $formProfile->handleRequest($request);
 

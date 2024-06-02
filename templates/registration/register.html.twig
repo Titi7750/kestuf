@@ -31,18 +31,18 @@
 		{{ form_start(registrationForm, {'attr': {'class': 'form', 'enctype': 'multipart/form-data'}}) }}
 
 		<div id="upload-section" class="d-flex justify-content-center align-items-baseline">
-            <div class="upload-container">
-                {{ form_widget(registrationForm.picture, {'attr':{'class':'form-control mb-3', 'id': 'picture-upload', 'style': 'display:none', 'onchange': 'previewImage(event)'}}) }}
-                <label for="picture-upload" class="upload-label">
-                    <div class="upload-circle" id="upload-circle">
-                        <i class="fa-solid fa-camera"></i>
-                    </div>
-                </label>
-                <img id="image-preview" src="#" alt="Prévisualisation de votre image" style="display: none; border-radius: 50%; width: 80px; height: 80px;">
-                {{ form_errors(registrationForm.picture) }}
-            </div>
-            {{ form_label(registrationForm.picture, 'Mets ta plus belle photo', {'label_attr':{'class':'fw-regular fs-18px ms-2'}}) }}
-        </div>
+			<div class="upload-container">
+				{{ form_widget(registrationForm.picture, {'attr':{'class':'form-control mb-3', 'id': 'picture-upload', 'style': 'display:none', 'onchange': 'previewImage(event)'}}) }}
+				<label for="picture-upload" class="upload-label">
+					<div class="upload-circle" id="upload-circle">
+						<i class="fa-solid fa-camera"></i>
+					</div>
+				</label>
+				<img id="image-preview" src="#" alt="Prévisualisation de votre image" style="display: none; border-radius: 50%; width: 80px; height: 80px;">
+				{{ form_errors(registrationForm.picture) }}
+			</div>
+			{{ form_label(registrationForm.picture, 'Mets ta plus belle photo', {'label_attr':{'class':'fw-regular fs-18px ms-2'}}) }}
+		</div>
 
 		{{ form_label(registrationForm.firstname, 'Ton prénom', {'label_attr':{'class':'fw-regular fs-18px'}}) }}
 		<div class="d-flex justify-content-center align-items-center flex-column">
@@ -82,27 +82,5 @@
 		{{ form_end(registrationForm) }}
 	</main>
 
-	<script>
-		document.getElementById('upload-circle').addEventListener('click', function () {
-			document.getElementById('picture-upload').click();
-		});
-
-		function previewImage(event) {
-			const reader = new FileReader();
-			reader.onload = function () {
-				const output = document.getElementById('image-preview');
-				const circle = document.getElementById('upload-circle');
-				const uploadSection = document.getElementById('upload-section');
-
-				output.src = reader.result;
-				output.style.display = 'block';
-				circle.style.display = 'none';
-				uploadSection.classList.remove('align-items-baseline');
-				uploadSection.classList.add('align-items-center');
-			};
-			reader.readAsDataURL(event.target.files[0]);
-		}
-
-		document.getElementById('picture-upload').addEventListener('change', previewImage);
-	</script>
+	<script src="{{ asset('js/previewImageUpload.js') }}"></script>
 {% endblock %}

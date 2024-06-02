@@ -13,6 +13,11 @@
 		</a>
 	</div>
 	<main class="container p-2">
+		{% if user.isVerified == 0 %}
+			<div class="alert alert-warning alert-dismissible fade show text-center mt-3" role="alert">
+				<strong>Attention !</strong> Tu n'as pas encore vérifié ton adresse mail. Vérifie ta boîte mail pour activer ton compte.
+			</div>
+		{% endif %}
 		<h1 class="color-main fw-black fs-36px">Salut Kestufeur !</h1>
 		<div class="d-flex align-items-center">
 			{% if user.picture == null %}

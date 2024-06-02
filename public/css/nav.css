@@ -5,7 +5,6 @@
 .nav-links {
     display: flex;
     justify-content: space-evenly;
-    align-items: center;
     list-style: none;
     transition: max-height 0.3s ease-in-out;
 }
@@ -35,13 +34,14 @@
 
     .nav-links {
         position: absolute;
-        top: 60px;
-        right: 0;
+        top: 38px;
+        right: 25px;
         background: white;
         flex-direction: column;
-        width: 100%;
+        width: 40%;
         max-height: 0;
         overflow: hidden;
+        border-radius: 20px;
     }
 
     .nav-links li {
@@ -50,5 +50,6 @@
 
     .nav-links.show {
         max-height: 300px;
+        z-index: 500;
     }
 }

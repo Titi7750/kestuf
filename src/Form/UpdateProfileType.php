@@ -51,36 +51,6 @@ class UpdateProfileType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('surname', TextType::class, [
-                'label' => 'Nom',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Remember to enter a name',
-                    ]),
-                    new Length([
-                        'min' => 2,
-                        'minMessage' => 'Sorry, your name must be at least {{ limit }} characters long',
-                        'max' => 50,
-                    ])
-                ],
-                'required' => true,
-            ])
-            ->add('plainPassword', PasswordType::class, [
-                'label' => 'Mot de passe',
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Remember to enter a password',
-                    ]),
-                    new Length([
-                        'min' => 9,
-                        'minMessage' => 'Sorry, your password must be at least {{ limit }} characters long',
-                        'max' => 4096,
-                    ]),
-                ],
-                'required' => false,
-            ])
             ->add('picture', FileType::class, [
                 'label' => 'Image',
                 'mapped' => false,

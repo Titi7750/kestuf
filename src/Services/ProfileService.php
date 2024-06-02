@@ -4,23 +4,18 @@ namespace App\Services;
 
 use App\Entity\CommentUser;
 use App\Entity\User;
-use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class ProfileService
 {
     private $userRepository;
     private $entityManager;
-    private $formFactory;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager, FormFactoryInterface $formFactory)
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager)
     {
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
-        $this->formFactory = $formFactory;
     }
 
     /**
