@@ -5,14 +5,24 @@ namespace App\Controller;
 use App\Form\FilterType;
 use App\Model\SearchData;
 use App\Repository\EventRepository;
+use App\Services\EventService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DefaultController extends AbstractController
 {
+    private $eventService;
+
+    public function __construct(EventService $eventService)
+    {
+        $this->eventService = $eventService;
+    }
+    
     /**
      * Display loading page
      *
@@ -45,6 +55,7 @@ class DefaultController extends AbstractController
      * @param Security $security
      * @return Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/mes-favoris', name: 'app_favorite')]
     public function favorites(Security $security): Response
     {
@@ -66,12 +77,29 @@ class DefaultController extends AbstractController
      *
      * @return Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/carte', name: 'app_map')]
     public function map(): Response
     {
+        $filterData = new SearchData();
+        $events = $this->eventService->getFilteredEvents($filterData);
+
         return $this->render('filter/map.html.twig', [
+            'events' => $events,
             'user' => $this->getUser(),
         ]);
+    }
+
+    /**
+     * Get data for map
+     */
+    #[IsGranted('ROLE_USER')]
+    #[Route('/map-data', name: 'app_map_data')]
+    public function mapData(): JsonResponse
+    {
+        $data = $this->eventService->getMapData();
+
+        return new JsonResponse($data);
     }
 
     /**
@@ -81,18 +109,16 @@ class DefaultController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Route('/filtrer', name: 'app_filtrer')]
-    public function filter(EventRepository $eventRepository, Request $request): Response
+    #[IsGranted('ROLE_USER')]
+    #[Route('/filtre', name: 'app_filter')]
+    public function filter(Request $request): Response
     {
         $filterData = new SearchData();
-        $form = $this->createForm(FilterType::class, $filterData);
-        $form->handleRequest($request);
+        $formFilter = $this->createForm(FilterType::class, $filterData);
+        $formFilter->handleRequest($request);
 
-        $events = $eventRepository->findSearch($filterData);
-
-        return $this->render('event/index.html.twig', [
-            'events' => $events,
-            'form' => $form->createView(),
+        return $this->render('filter/filter.html.twig', [
+            'formFilter' => $formFilter->createView(),
         ]);
     }
 }

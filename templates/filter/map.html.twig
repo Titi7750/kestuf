@@ -13,9 +13,9 @@
 
 	<main class="container">
 		<h1 class="text-center color-main fw-black fs-36px">Cherche un spot</h1>
-		<a href="#">Filtrer</a>
+		<a class="btn-filter ms-2" href="{{ path('app_filter') }}">Filtrer</a>
 
-		<div class="p-2">
+		<div class="p-2 mt-3">
 			<div id="map"></div>
 		</div>
 
@@ -25,4 +25,41 @@
 			</div>
 		</div>
 	</main>
+
+	{% block javascripts %}
+        {{ parent() }}
+        <script>
+            document.addEventListener('turbo:load', function () {
+			    const mapContainer = document.getElementById('map');
+			    const map = L.map(mapContainer).setView([45.750000, 4.850000], 13);
+
+				if (!map) {
+					return;
+				}				
+
+			    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			        maxZoom: 19,
+			        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+			    }).addTo(map);
+
+			    fetch("{{ path('app_map_data') }}")
+			    .then(response => response.json()) // Transformation of the response into JSON
+			    .then(data => { // Récupération des données
+			        data.forEach(event => { // Boucle sur les données
+			            L.marker([event.latitude, event.longitude]).addTo(map)
+			            .bindPopup(
+			                `<h2>${event.name}</h2>
+			                <a href="${createEventShowUrl(event.id)}">Voir l'évènement</a>`
+			            );
+			        });
+			    })
+			    .catch(error => console.error("Erreur :", error));
+			});
+
+			function createEventShowUrl(eventId) {
+                const url = "{{ path('app_event_show', {'id': 'REPLACE_ID'}) }}";
+                return url.replace('REPLACE_ID', eventId);
+            }
+        </script>
+    {% endblock %}
 {% endblock %}

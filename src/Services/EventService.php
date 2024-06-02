@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Model\SearchData;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EventService
 {
@@ -29,6 +30,31 @@ class EventService
     public function getFilteredEvents(SearchData $searchData)
     {
         return $this->eventRepository->findSearch($searchData);
+    }
+
+    /**
+     * Get data for map
+     * 
+     * @param EventRepository $eventRepository
+     */
+
+    public function getMapData()
+    {
+        $filterData = new SearchData();
+        $events = $this->eventRepository->findSearch($filterData);
+
+        $data = [];
+        foreach ($events as $event) {
+            $data[] = [
+                'id' => $event->getId(),
+                'name' => $event->getName(),
+                'address' => $event->getAddress(),
+                'latitude' => $event->getLatitude(),
+                'longitude' => $event->getLongitude(),
+            ];
+        }
+
+        return $data;
     }
 
     /**

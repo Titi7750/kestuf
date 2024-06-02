@@ -16,10 +16,10 @@
 						<i class="fa-solid fa-magnifying-glass color-main me-3"></i>
 						<a class="fw-bold fs-18px" href="{{ path('app_map') }}" aria-label="Aller à la page de recherche">Recherche</a>
 					</li>
-					<li>
+					{# <li>
 						<i class="fa-regular fa-comments color-main me-3"></i>
 						<a class="fw-bold fs-18px" href="#" aria-label="Aller à la page message">Message</a>
-					</li>
+					</li> #}
 					<li>
 						<i class="fa-solid fa-heart color-main me-3"></i>
 						<a class="fw-bold fs-18px" href="{{ path('app_favorite') }}" aria-label="Voir la page favoris">Favoris</a>
@@ -36,4 +36,19 @@
 			</div>
 		</div>
 	</nav>
+
+	{% block javascripts %}
+		<script>
+		document.addEventListener('DOMContentLoaded', function () {
+    		const burgerMenu = document.getElementById('burger-menu');
+    		const navLinks = document.getElementById('nav-links');
+
+    		function toggleMenu() {
+    		    navLinks.classList.toggle('show');
+    		}
+
+    		burgerMenu.addEventListener('click', toggleMenu);
+		});
+		</script>
+	{% endblock %}
 {% endblock %}

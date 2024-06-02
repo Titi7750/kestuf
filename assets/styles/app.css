@@ -384,6 +384,15 @@ a {
     border: 1px solid var(--color-main);
 }
 
+.btn-filter {
+    background-color: var(--color-white);
+    color: var(--color-blue);
+    border: 2px solid var(--color-purple);
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
 .link-container {
     gap: 10px;
 }
