@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Page de chargement
+{% endblock %}
+
+{% block body %}
+	<main class="container d-flex justify-content-center align-items-center flex-column vh-100">
+		<img class="mb-5" src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf en orange"/>
+		<div class="circle-loader d-flex justify-content-center align-items-center">
+			<img class="mascotte" src="{{ asset('images/mascotte_white.png') }}" alt="Mascotte cornichon de Kestuf"/>
+		</div>
+	</main>
+
+	<script>
+		setTimeout(function () {
+    	    window.location.href = "{{ path('app_welcome') }}";
+    	}, 3000);
+	</script>
+{% endblock %}

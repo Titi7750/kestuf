@@ -14,11 +14,22 @@ use Symfony\Component\Routing\Attribute\Route;
 class DefaultController extends AbstractController
 {
     /**
+     * Display loading page
+     *
+     * @return Response
+     */
+    #[Route('/', name: 'app_loading')]
+    public function loading(): Response
+    {
+        return $this->render('loading.html.twig');
+    }
+
+    /**
      * Display homepage
      *
      * @return Response
      */
-    #[Route('/', name: 'app_welcome')]
+    #[Route('/connexion-inscription', name: 'app_welcome')]
     public function index(): Response
     {
         if ($this->getUser()) {

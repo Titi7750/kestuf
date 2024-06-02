@@ -150,6 +150,10 @@ a {
     margin-right: 0;
 }
 
+.mt-3 {
+    margin-top: 1rem;
+}
+
 .mt-5 {
     margin-top: 3rem;
 }
@@ -342,6 +346,27 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.circle-loader {
+    width: 60vw;
+    height: 60vw;
+    max-width: 450px;
+    max-height: 450px;
+    border-radius: 50%;
+    background-color: var(--color-main);
+    margin: 0 5px;
+    position: relative;
+}
+
+.mascotte {
+    width: 80%;
+    max-width: 250px;
+    height: auto;
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .btn {
