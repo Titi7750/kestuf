@@ -10,6 +10,21 @@ use DateTime;
 class SearchData
 {
     /**
+     * @var float
+     */
+    public float $latitude;
+
+    /**
+     * @var float
+     */
+    public float $longitude;
+
+    /**
+     * @var string[]
+     */
+    public array $price;
+
+    /**
      * @var datetime
      */
     public DateTime $open_hours;
