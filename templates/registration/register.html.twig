@@ -4,31 +4,32 @@
 {% endblock %}
 
 {% block body %}
-	{% for flash_error in app.flashes('verify_email_error') %}
-		<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-	{% endfor %}
-
-	{% for messageSuccess in app.flashes('successRegistration') %}
-		<div class="flash-notice">
-			{{ messageSuccess }}
-		</div>
-	{% endfor %}
-
-	<main
-		class="container p-2">
-		{# A modifier -> la page et faire sous forme de popup #}
-		{% for messageSuccess in app.flashes('successCheckEmail') %}
-			<div class="flash-notice">
-				{{ messageSuccess }}
-			</div>
-		{% endfor %}
-
+	<main class="container p-2">
 		<div class="text-center">
 			<h1 class="h3 mb-3 font-weight-normal color-main fw-black fs-36px">Tu vas kiffer !</h1>
 			<p class="fw-bold fs-24px">Alors inscris toi vite</p>
 		</div>
 
 		{{ form_start(registrationForm, {'attr': {'class': 'form', 'enctype': 'multipart/form-data'}}) }}
+
+		<div class="text-center">
+			{% for flash_error in app.flashes('verify_email_error') %}
+				<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+			{% endfor %}
+
+			{% for messageSuccess in app.flashes('successRegistration') %}
+				<div class="flash-notice">
+					{{ messageSuccess }}
+				</div>
+			{% endfor %}
+
+			{% for messageSuccess in app.flashes('successCheckEmail') %}
+				<div class="flash-notice">
+					{{ messageSuccess }}
+					<br><a href="{{ path('app_loading') }}" class="color-main fw-bold fs-14px">Aller sur le site</a>
+				</div>
+			{% endfor %}
+		</div>
 
 		<div id="upload-section" class="d-flex justify-content-center align-items-baseline">
 			<div class="upload-container">

@@ -13,6 +13,10 @@ document.addEventListener('turbo:load', function () {
     const burgerMenu = document.getElementById('burger-menu');
     const navLinks = document.getElementById('nav-links');
 
+    if (!burgerMenu || !navLinks) {
+        return;
+    }
+
     function toggleMenu() {
         navLinks.classList.toggle('show');
     }
