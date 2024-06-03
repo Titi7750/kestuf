@@ -36,19 +36,4 @@
 			</div>
 		</div>
 	</nav>
-
-	{% block javascripts %}
-		<script>
-		document.addEventListener('DOMContentLoaded', function () {
-    		const burgerMenu = document.getElementById('burger-menu');
-    		const navLinks = document.getElementById('nav-links');
-
-    		function toggleMenu() {
-    		    navLinks.classList.toggle('show');
-    		}
-
-    		burgerMenu.addEventListener('click', toggleMenu);
-		});
-		</script>
-	{% endblock %}
 {% endblock %}
