@@ -122,4 +122,23 @@ class EventService
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+
+    /**
+     * Toggle outlet event for user
+     * 
+     * @param User $user
+     * @param Event $event
+     * @return void
+     */
+    public function toggleOutlet(User $user, Event $event): void
+    {
+        if ($user->getEventUserOutlet()->contains($event)) {
+            $user->removeEventUserOutlet($event);
+        } else {
+            $user->addEventUserOutlet($event);
+        }
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
 }

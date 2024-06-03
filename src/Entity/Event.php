@@ -66,6 +66,9 @@ class Event
     #[ORM\JoinTable(name: 'user_event_participant')]
     private Collection $user_event_participant;
 
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'event_user_outlet')]
+    private Collection $user_event_outlet;
+
     public function __construct()
     {
         $this->user_event_favorite = new ArrayCollection();
@@ -73,6 +76,7 @@ class Event
         $this->specialRegime_event = new ArrayCollection();
         $this->commentEvent_event = new ArrayCollection();
         $this->user_event_participant = new ArrayCollection();
+        $this->user_event_outlet = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -345,6 +349,33 @@ class Event
     public function removeUserEventParticipant(User $userEventParticipant): static
     {
         $this->user_event_participant->removeElement($userEventParticipant);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUserEventOutlet(): Collection
+    {
+        return $this->user_event_outlet;
+    }
+
+    public function addUserEventOutlet(User $userEventOutlet): static
+    {
+        if (!$this->user_event_outlet->contains($userEventOutlet)) {
+            $this->user_event_outlet->add($userEventOutlet);
+            $userEventOutlet->addEventUserOutlet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserEventOutlet(User $userEventOutlet): static
+    {
+        if ($this->user_event_outlet->removeElement($userEventOutlet)) {
+            $userEventOutlet->removeEventUserOutlet($this);
+        }
 
         return $this;
     }

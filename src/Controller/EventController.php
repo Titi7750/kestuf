@@ -63,6 +63,8 @@ class EventController extends AbstractController
             throw $this->createNotFoundException('L\'événement n\'existe pas');
         }
 
+        $outlets = $event->getUserEventOutlet();
+
         $comments = $event->getCommentEventEvent();
         $newComment = new CommentEvent();
         $commentForm = $this->createForm(CommentEventType::class, $newComment);
@@ -79,6 +81,7 @@ class EventController extends AbstractController
             'event' => $event,
             'commentForm' => $commentForm->createView(),
             'comments' => $comments,
+            'outlets' => $outlets,
             'user' => $this->getUser(),
         ]);
     }
@@ -188,6 +191,31 @@ class EventController extends AbstractController
         }
 
         $this->eventService->toggleParticipation($user, $event);
+
+        return $this->redirectToRoute('app_event_show', ['id' => $id]);
+    }
+
+    /**
+     * Outlet an event
+     * 
+     * @param integer $id
+     * @param Request $request
+     * @return Response
+     */
+    #[Route('/evenement/sortir/{id}', name: 'app_event_outlet')]
+    public function outletEvent(int $id, Security $security): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $event = $this->eventService->getEventById($id);
+        if (!$event) {
+            throw $this->createNotFoundException('Événement non trouvé.');
+        }
+
+        $this->eventService->toggleOutlet($user, $event);
 
         return $this->redirectToRoute('app_event_show', ['id' => $id]);
     }

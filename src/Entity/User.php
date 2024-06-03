@@ -73,6 +73,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Conversation::class, mappedBy: 'participant')]
     private Collection $participant_user;
 
+    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'user_event_outlet')]
+    #[ORM\JoinTable(name: 'user_event_outlet')]
+    private Collection $event_user_outlet;
+
     public function __construct()
     {
         $this->event_user_favorite = new ArrayCollection();
@@ -83,6 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->message_user = new ArrayCollection();
         $this->conversation_user = new ArrayCollection();
         $this->participant_user = new ArrayCollection();
+        $this->event_user_outlet = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -435,6 +440,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->participant_user->removeElement($participantUser)) {
             $participantUser->removeParticipant($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEventUserOutlet(): Collection
+    {
+        return $this->event_user_outlet;
+    }
+
+    public function addEventUserOutlet(Event $eventUserOutlet): static
+    {
+        if (!$this->event_user_outlet->contains($eventUserOutlet)) {
+            $this->event_user_outlet->add($eventUserOutlet);
+        }
+
+        return $this;
+    }
+
+    public function removeEventUserOutlet(Event $eventUserOutlet): static
+    {
+        $this->event_user_outlet->removeElement($eventUserOutlet);
 
         return $this;
     }

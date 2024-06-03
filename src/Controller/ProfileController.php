@@ -41,6 +41,7 @@ class ProfileController extends AbstractController
         }
 
         $comments = $user->getUserReceiveComment();
+        $outlets = $user->getEventUserOutlet();
 
         $newComment = new CommentUser();
         $commentForm = $this->createForm(CommentUserType::class, $newComment);
@@ -56,7 +57,8 @@ class ProfileController extends AbstractController
         return $this->render('profile/index.html.twig', [
             'user' => $user,
             'commentForm' => $commentForm->createView(),
-            'comments' => $comments
+            'comments' => $comments,
+            'outlets' => $outlets,
         ]);
     }
 

@@ -15,7 +15,8 @@
 	<main class="container p-2">
 		{% if user.isVerified == 0 %}
 			<div class="alert alert-warning alert-dismissible fade show text-center mt-3" role="alert">
-				<strong>Attention !</strong> Tu n'as pas encore vérifié ton adresse mail. Vérifie ta boîte mail pour activer ton compte.
+				<strong>Attention !</strong>
+				Tu n'as pas encore vérifié ton adresse mail. Vérifie ta boîte mail pour activer ton compte.
 			</div>
 		{% endif %}
 		<h1 class="color-main fw-black fs-36px">Salut Kestufeur !</h1>
@@ -35,7 +36,22 @@
 		<h2 class="color-main fw-black fs-36px">Tes badges</h2>
 		<p class="color-purple fw-bold fs-20px">Aucun badge pour le moment !</p>
 		<h2 class="color-main fw-black fs-36px">Tes sorties</h2>
-		<p class="color-purple fw-bold fs-20px">Aucune sortie pour le moment !</p>
+		{% if outlets is empty %}
+			<p class="color-purple fw-bold fs-20px">Aucune sortie pour le moment !</p>
+		{% else %}
+			{% for outlet in outlets %}
+				<div class="card">
+					<a href="{{ path('app_event_show', {'id': outlet.id}) }}" aria-label="Voir les détails de l'évènement {{ outlet.name }}">
+						<div class="image-container">
+							<img class="image-card" src="{{ asset('uploads/images/' ~ outlet.picture) }}" alt="Image de l'évènement {{ outlet.name }}">
+						</div>
+						<div class="card-body">
+							<h2 class="card-title">{{ outlet.name }}</h2>
+						</div>
+					</a>
+				</div>
+			{% endfor %}
+		{% endif %}
 		<p class="color-blue fw-bold fs-20px">N’oublies pas de scanner le QR code quand tu te rends au spot !</p>
 		<div class="d-flex justify-content-center flex-wrap link-container">
 			<a class="btn ms-3 link-btn" href="{{ path('app_map') }}" aria-label="Trouver des lieux insolites">Cherches un spot</a>
