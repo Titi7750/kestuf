@@ -29,9 +29,11 @@
 				<img class="image-profile me-3" src="{{ asset('uploads/images/' ~ user.picture) }}" alt="Image de profil de {{ user.firstname }} {{ user.surname }}">
 			{% endif %}
 			<p class="color-purple fw-bold fs-20px me-3">{{ user.firstname }}</p>
-			<a href="{{ path('app_profile_update', {'surname': user.surname}) }}" aria-label="Modifier le profil">
-				<i class="fa-solid fa-pen-to-square"></i>
-			</a>
+			{% if user.id == app.user.id %}
+				<a href="{{ path('app_profile_update', {'surname': user.surname}) }}" aria-label="Modifier le profil">
+					<i class="fa-solid fa-pen-to-square"></i>
+				</a>
+			{% endif %}
 		</div>
 		<h2 class="color-main fw-black fs-36px">Tes badges</h2>
 		<p class="color-purple fw-bold fs-20px">Aucun badge pour le moment !</p>
@@ -39,18 +41,20 @@
 		{% if outlets is empty %}
 			<p class="color-purple fw-bold fs-20px">Aucune sortie pour le moment !</p>
 		{% else %}
-			{% for outlet in outlets %}
-				<div class="card">
-					<a href="{{ path('app_event_show', {'id': outlet.id}) }}" aria-label="Voir les détails de l'évènement {{ outlet.name }}">
-						<div class="image-container">
-							<img class="image-card" src="{{ asset('uploads/images/' ~ outlet.picture) }}" alt="Image de l'évènement {{ outlet.name }}">
-						</div>
-						<div class="card-body">
-							<h2 class="card-title">{{ outlet.name }}</h2>
-						</div>
-					</a>
-				</div>
-			{% endfor %}
+			<div class="d-flex gap-2 flex-wrap">
+				{% for outlet in outlets %}
+					<div class="card">
+						<a href="{{ path('app_event_show', {'id': outlet.id}) }}" aria-label="Voir les détails de l'évènement {{ outlet.name }}">
+							<div class="image-container">
+								<img class="image-card" src="{{ asset('uploads/images/' ~ outlet.picture) }}" alt="Image de l'évènement {{ outlet.name }}">
+							</div>
+							<div class="card-body">
+								<h2 class="card-title">{{ outlet.name }}</h2>
+							</div>
+						</a>
+					</div>
+				{% endfor %}
+			</div>
 		{% endif %}
 		<p class="color-blue fw-bold fs-20px">N’oublies pas de scanner le QR code quand tu te rends au spot !</p>
 		<div class="d-flex justify-content-center flex-wrap link-container">

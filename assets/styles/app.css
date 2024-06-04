@@ -234,6 +234,10 @@ a {
     height: 100vh;
 }
 
+.gap-2 {
+    gap: 0.5rem;
+}
+
 /* Custom */
 .cards-container {
     display: flex;

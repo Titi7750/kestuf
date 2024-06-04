@@ -75,28 +75,20 @@
 			</ul>
 		</div>
 		<div class="p-5 mb-3">
-			{% if app.user and event in app.user.eventUserParticipant %}
-				<div class="d-flex justify-content-center flex-wrap link-container">
-					{% if outlets is empty %}
-						<a href="#" class="btn ms-3 link-btn" aria-label="Je veux y aller">Je veux y aller !</a>
-					{% else %}
-						<a href="{{ path('app_event_outlet', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Je ne veux plus y aller">Je ne veux plus y aller !</a>
-					{% endif %}
+			<div class="d-flex justify-content-center flex-wrap link-container">
+				{% if app.user and app.user in outlets %}
+					<a href="{{ path('app_event_outlet', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Je ne veux plus y aller">Je ne veux plus y aller !</a>
+                	<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Laisser un avis">Laisser un avis</a>
+				{% elseif app.user and app.user in participants %}
 					<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn link-btn" aria-label="Se désinscrire de l'événement">En fait non !</a>
-					<a href="#" class="btn ms-3 link-btn" aria-label="Voir les personnes intéressées">Personnes intéressés</a>
-					<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Laisser un avis">Laisser un avis</a>
-				</div>
-			{% else %}
-				<div class="d-flex justify-content-center flex-wrap link-container">
-					{% if outlets is empty %}
-						<a href="#" class="btn ms-3 link-btn" aria-label="Je veux y aller">Je veux y aller !</a>
-					{% else %}
-						<a href="{{ path('app_event_outlet', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Je ne veux plus y aller">Je ne veux plus y aller !</a>
-					{% endif %}
-					<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn link-btn" aria-label="Participer à l'événement">Rencontres ?</a>
-					<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Laisser un avis">Laisser un avis</a>
-				</div>
-			{% endif %}
+                	<a href="#" class="btn ms-3 link-btn" aria-label="Voir les personnes intéressées">Personnes intéressées</a>
+                	<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Laisser un avis">Laisser un avis</a>
+				{% else %}
+					<a href="#" class="btn ms-3 link-btn" aria-label="Je veux y aller">Je veux y aller !</a>
+                	<a href="{{ path('app_event_participate', {'id': event.id}) }}" class="btn link-btn" aria-label="Participer à l'événement">Rencontres ?</a>
+                	<a href="{{ path('app_event_give_comment', {'id': event.id}) }}" class="btn ms-3 link-btn" aria-label="Laisser un avis">Laisser un avis</a>
+				{% endif %}
+			</div>
 		</div>
 		<div class="cards-container">
 			{% for comment in comments %}
@@ -131,38 +123,79 @@
 		</div>
 	</div>
 
+	<div id="myModalMeet" class="modal">
+		<div class="modal-content">
+			<div class="text-end">
+				<span class="close-meet color-purple">&times;</span>
+			</div>
+			{% if participants is empty %}
+				<p class="color-blue fs-18px text-center">Personne n'est intéressé par cet événement pour le moment.</p>
+			{% else %}
+				{% for participant in participants %}
+					<div class="d-flex align-items-center mb-3">
+						<img class="image-profile me-3" src="{{ asset('uploads/images/' ~ participant.picture) }}" alt="Image de profil de {{ participant.firstname }} {{ participant.surname }}">
+						<a class="fw-bold fs-18px color-purple" href="{{ path('app_profile', {'surname': participant.surname}) }}">{{ participant.firstname }}</a>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+
 	{% block javascripts %}
-		{{ parent() }}
-		<script>
-			document.addEventListener('turbo:load', (event) => {
-				var modal = document.getElementById("myModal");
-				var btn = document.querySelector(".link-btn[aria-label='Je veux y aller']");
-				var span = document.getElementsByClassName("close")[0];
-				var bienComprisBtn = document.querySelector(".btn[aria-label='Bien compris']");
+    	{{ parent() }}
+    	<script>
+    	    document.addEventListener('turbo:load', (event) => {
+    	        const modal = document.getElementById("myModal");
+    	        const btn = document.querySelector(".link-btn[aria-label='Je veux y aller']");
+    	        const span = document.getElementsByClassName("close")[0];
+    	        const bienComprisBtn = document.querySelector(".btn[aria-label='Bien compris']");
 
-				if (! btn) {
-					return;
-				}
+    	        const modalMeet = document.getElementById("myModalMeet");
+    	        const btnMeet = document.querySelector(".link-btn[aria-label='Voir les personnes intéressées']");
+    	        const spanMeet = document.getElementsByClassName("close-meet")[0];
 
-				btn.onclick = function (e) {
-					e.preventDefault();
-					modal.style.display = "block";
-				}
+    	        if (btn) {
+    	            btn.onclick = function (e) {
+    	                e.preventDefault();
+    	                modal.style.display = "block";
+    	            }
+    	        }
 
-				span.onclick = function () {
-					modal.style.display = "none";
-				}
+    	        if (btnMeet) {
+    	            btnMeet.onclick = function (e) {
+    	                e.preventDefault();
+    	                modalMeet.style.display = "block";
+    	            }
+    	        }
 
-				bienComprisBtn.onclick = function () {
-					modal.style.display = "none";
-				}
+    	        if (span) {
+    	            span.onclick = function () {
+    	                modal.style.display = "none";
+    	            }
+    	        }
 
-				window.onclick = function (event) {
-					if (event.target == modal) {
-						modal.style.display = "none";
-					}
-				}
-			});
-		</script>
+    	        if (spanMeet) {
+    	            spanMeet.onclick = function () {
+    	                modalMeet.style.display = "none";
+    	            }
+    	        }
+
+    	        if (bienComprisBtn) {
+    	            bienComprisBtn.onclick = function () {
+    	                modal.style.display = "none";
+    	            }
+    	        }
+
+    	        window.onclick = function (event) {
+    	            if (event.target == modal) {
+    	                modal.style.display = "none";
+    	            }
+
+    	            if (event.target == modalMeet) {
+    	                modalMeet.style.display = "none";
+    	            }
+    	        }
+    	    });
+    	</script>
 	{% endblock %}
 {% endblock %}

@@ -64,6 +64,7 @@ class EventController extends AbstractController
         }
 
         $outlets = $event->getUserEventOutlet();
+        $participants = $event->getUserEventParticipant();
 
         $comments = $event->getCommentEventEvent();
         $newComment = new CommentEvent();
@@ -82,6 +83,7 @@ class EventController extends AbstractController
             'commentForm' => $commentForm->createView(),
             'comments' => $comments,
             'outlets' => $outlets,
+            'participants' => $participants,
             'user' => $this->getUser(),
         ]);
     }

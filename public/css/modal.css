@@ -21,13 +21,16 @@
     border-radius: 30px;
 }
 
-.close {
+.close,
+.close-meet {
     font-size: 50px;
     font-weight: bold;
 }
 
 .close:hover,
-.close:focus {
+.close:focus,
+.close-meet:hover,
+.close-meet:focus {
     color: var(--color-main);
     text-decoration: none;
     cursor: pointer;
