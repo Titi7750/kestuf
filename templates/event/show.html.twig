@@ -133,7 +133,13 @@
 			{% else %}
 				{% for participant in participants %}
 					<div class="d-flex align-items-center mb-3">
-						<img class="image-profile me-3" src="{{ asset('uploads/images/' ~ participant.picture) }}" alt="Image de profil de {{ participant.firstname }} {{ participant.surname }}">
+						{% if participant.picture == null %}
+							<div class="upload-circle me-3" id="upload-circle">
+								<i class="fa-solid fa-user"></i>
+							</div>
+						{% else %}
+							<img class="image-profile me-3" src="{{ asset('uploads/images/' ~ participant.picture) }}" alt="Image de profil de {{ participant.firstname }} {{ participant.surname }}">
+						{% endif %}
 						<a class="fw-bold fs-18px color-purple" href="{{ path('app_profile', {'surname': participant.surname}) }}">{{ participant.firstname }}</a>
 					</div>
 				{% endfor %}
