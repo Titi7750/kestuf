@@ -7,14 +7,14 @@
 	<main class="container p-2">
 		<a href="{{ path('app_map') }}">Retour</a>
 		<h1 class="color-main fw-black fs-36px">Les filtres</h1>
-		{{ form_start(formFilter, {'method': 'GET', 'action': path('app_map')}) }}
+		{{ form_start(formFilter, {'method': 'GET', 'action': path('app_event')}) }}
 
-		<h3 class="color-blue fw-bold fs-24px">Localisation</h3>
+		{# <h3 class="color-blue fw-bold fs-24px">Localisation</h3>
 		<div class="location">
 			<button class="btn-location">Autour de moi</button>
 			<input type="range" min="1" max="100" value="1" class="slider" id="locationRange">
 			<label for="locationRange">1 km</label>
-		</div>
+		</div> #}
 
 		<h3 class="color-blue fw-bold fs-24px">Prix</h3>
 		<div class="price-options">
