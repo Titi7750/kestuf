@@ -143,6 +143,10 @@ a {
     text-decoration: underline;
 }
 
+.overflow-hidden {
+    overflow: hidden;
+}
+
 .my-auto {
     margin-top: auto;
     margin-bottom: auto;
