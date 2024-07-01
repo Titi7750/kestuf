@@ -96,6 +96,14 @@ class EventType extends AbstractType
 
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
+                'constraints' => [
+                    new NotBlank(
+                        ['message' => 'Remember to enter a description']
+                    ),
+                    new Length([
+                        'max' => 1000,
+                    ])
+                ],
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
@@ -157,6 +165,11 @@ class EventType extends AbstractType
                 'label' => 'Prix',
                 'required' => false,
                 'placeholder' => 'Choisir un prix',
+                'constraints' => [
+                    new NotBlank(
+                        ['message' => 'Remember to choose a price']
+                    ),
+                ],
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
@@ -183,7 +196,8 @@ class EventType extends AbstractType
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -81,6 +81,7 @@ class AdminCategoryService
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($category);
             $this->entityManager->flush();
 
             return ['success' => true, 'category' => $category];

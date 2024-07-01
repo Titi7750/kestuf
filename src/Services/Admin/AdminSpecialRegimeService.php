@@ -81,6 +81,7 @@ class AdminSpecialRegimeService
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($specialRegime);
             $this->entityManager->flush();
 
             return ['success' => true, 'specialRegime' => $specialRegime];

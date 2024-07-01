@@ -83,6 +83,7 @@ class AdminCommentService
     public function publishCommentUser(CommentUser $commentUser)
     {
         $commentUser->setActive(true);
+        $this->entityManager->persist($commentUser);
         $this->entityManager->flush();
     }
 
@@ -95,6 +96,7 @@ class AdminCommentService
     public function unpublishCommentUser(CommentUser $commentUser)
     {
         $commentUser->setActive(false);
+        $this->entityManager->persist($commentUser);
         $this->entityManager->flush();
     }
 

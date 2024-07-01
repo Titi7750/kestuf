@@ -1,10 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<h1>Aucune page trouvée</h1>
+	<div class="container text-center mt-5">
+		<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">
+			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+		</a>
+	</div>
 
-	<p>
-		The requested page couldn't be located. Checkout for any URL misspelling or
-		<a href="{{ path('app_event') }}">return to the homepage</a>.
-	</p>
+	<main class="container my-5">
+		<h1 class="text-center color-main fw-black fs-36px">Aucune page trouvée</h1>
+
+		<p class="text-center fw-regular fs-18px my-5">
+			La page demandée n'a pas pu être trouvée. Vérifiez s'il y a une faute de frappe dans l'URL ou
+			<a class="text-decoration-underline" href="{{ path('app_event') }}">retournez à la page d'accueil</a>.
+		</p>
+	</main>
 {% endblock %}

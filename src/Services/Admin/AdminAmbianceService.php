@@ -81,6 +81,7 @@ class AdminAmbianceService
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($ambiance);
             $this->entityManager->flush();
 
             return ['success' => true, 'ambiance' => $ambiance];

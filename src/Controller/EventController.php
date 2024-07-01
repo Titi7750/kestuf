@@ -5,7 +5,6 @@ namespace App\Controller;
 
 use App\Entity\CommentEvent;
 use App\Form\CommentEventType;
-use App\Form\FilterType;
 use App\Model\SearchData;
 use App\Services\EventService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,21 +27,17 @@ class EventController extends AbstractController
     /**
      * Display all events
      *
-     * @param Request $request
      * @return Response
      */
     #[Route('/evenement', name: 'app_event')]
-    public function index(Request $request): Response
+    public function index(): Response
     {
         $filterData = new SearchData();
-        $form = $this->createForm(FilterType::class, $filterData);
-        $form->handleRequest($request);
 
         $events = $this->eventService->getFilteredEvents($filterData);
 
         return $this->render('event/index.html.twig', [
             'events' => $events,
-            'form' => $form->createView(),
             'user' => $this->getUser(),
         ]);
     }

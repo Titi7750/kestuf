@@ -24,7 +24,6 @@ class AdminEventService
         $this->localisator = $localisator;
         $this->formFactory = $formFactory;
     }
-
     /**
      * List all events
      *
@@ -34,7 +33,6 @@ class AdminEventService
     {
         return $this->entityManager->getRepository(Event::class)->findAll();
     }
-
     /**
      * Get event by id
      *
@@ -89,6 +87,7 @@ class AdminEventService
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->handleEventForm($event, $form);
+            $this->entityManager->persist($event);
             $this->entityManager->flush();
 
             return ['success' => true, 'event' => $event];

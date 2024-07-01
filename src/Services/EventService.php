@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Model\SearchData;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EventService
 {
