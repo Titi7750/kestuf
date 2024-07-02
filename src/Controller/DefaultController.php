@@ -121,4 +121,26 @@ class DefaultController extends AbstractController
             'formFilter' => $formFilter->createView(),
         ]);
     }
+
+    /**
+     * Legal information
+     * 
+     * @return Response
+     */
+    #[Route('/mentions-legales', name: 'app_legal_information')]
+    public function legalInformation(): Response
+    {
+        return $this->render('legal_information.html.twig');
+    }
+
+    /**
+     * Privacy policy
+     * 
+     * @return Response
+     */
+    #[Route('/politique-de-confidentialite', name: 'app_privacy_policy')]
+    public function privacyPolicy(): Response
+    {
+        return $this->render('privacy_policy.html.twig');
+    }
 }

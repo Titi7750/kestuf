@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Mentions légales
+{% endblock %}
+
+{% block body %}
+	{% include 'components/_nav.html.twig' %}
+	<div class="container text-center mt-5">
+		<a href="{{ path('app_event') }}" aria-label="Retour à la page des évènements">
+			<img src="{{ asset('images/kestuf_orange.png') }}" alt="Logo Kestuf' en orange">
+		</a>
+	</div>
+	<main class="container">
+		<h1 class="text-center color-main fw-black fs-36px mt-5">Mentions légales</h1>
+		<p class="mb-5">
+			Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l'économie numérique, il est précisé aux utilisateurs du site Kestuf l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi.
+		</p>
+
+		<h2>Édition du site</h2>
+
+		<p class="mb-5">Le présent site, accessible à l’URL https://kestuf.online/, est édité par : l'équipe Kestuf, résidant 26 Rue de la Villette, 69003 Lyon.</p>
+
+		<h2>Hébergement</h2>
+		<p class="mb-5">Le Site est hébergé par la société Oracle, dont le siège social est situé 15 boulevard Charles de Gaulle, 92715 Colombes cedex.</p>
+
+		<h2>Directeur de publication</h2>
+		<p class="mb-5">Le Directeur de la publication du Site est Tristan Fioroni.</p>
+
+		<h2>Nous contacter</h2>
+		<p class="mb-5">Par téléphone : +33648495319<br>Par email : tristanfio05@gmail.com<br>Par courrier : 26 Rue de la Villette, 69003 Lyon</p>
+
+		<h2>Propriété intellectuelle</h2>
+		<p class="mb-5">Toute reproduction ou représentation totale ou partielle de ce site, par quelque procédé que ce soit, sans l'autorisation expresse de Kestuf est interdite et constituerait une contrefaçon sanctionnée par les articles L. 335-2 et suivants du Code de la propriété intellectuelle.</p>
+
+		<h2>Données personnelles</h2>
+		<p class="mb-5">Le traitement de vos données à caractère personnel est régi par notre Charte du respect de la vie privée, disponible depuis la section "Charte de Protection des Données Personnelles", conformément au Règlement Général sur la Protection des Données 2016/679 du 27 avril 2016 («RGPD»).</p>
+	</main>
+{% endblock %}
