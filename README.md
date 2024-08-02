@@ -4,10 +4,10 @@ Kestuf is a web application developed as part of the validation of my Concepteur
 
 ## Features
 
-# Interactive Map: Explore Lyon with an interactive map that lists all the unique and unusual locations.
-# Advanced Filtering: Easily find places based on your preferences (type of location, distance, etc.).
-# Reviews and Comments: Leave reviews and read comments from other users to get a better sense of each location.
-# Favorites: Save your favorite spots for future visits.
+• Interactive Map: Explore Lyon with an interactive map that lists all the unique and unusual locations.
+• Advanced Filtering: Easily find places based on your preferences (type of location, distance, etc.).
+• Reviews and Comments: Leave reviews and read comments from other users to get a better sense of each location.
+• Favorites: Save your favorite spots for future visits.
 
 ## Installation
 
